@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+	<title>Presenter</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link href="css/mini-dark.min.css" rel="stylesheet" />
+	<link href="css/style.css" rel="stylesheet" />
+	<script src="js/paho-mqtt-min.js" type="text/javascript"></script>
+	<script src="js/functions.js" type="text/javascript"></script>
+</head>
+<body>
+	<div>
+		<div id="note-stream"></div>
+		<div id="message-stream" class="row cols-sm-12 cols-md-6 cols-lg-4"></div>
+	</div>
+
+	<span id="toast" class="toast">Laden</span>
+
+	<div id="template-note" class="hidden">
+		<div class="card fluid warning"><h2 class="section"></h2></div>
+	</div>
+	<div id="template-message" class="hidden">
+		<div><blockquote></blockquote></div>
+	</div>
+</body>
+</html>

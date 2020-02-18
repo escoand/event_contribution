@@ -1,0 +1,7 @@
+.buttons { text-align:right; }
+.with-footer { margin-bottom: 90px; }
+.toast { text-align:center; }
+
+blockquote.section { padding: calc(3 * var(--universal-padding)) !important; }
+footer { bottom:0; left:0; position:fixed; right:0; }
+h2.section { text-align:center; }
