@@ -1,4 +1,5 @@
-var host_url = 'ws://localhost:9001/mqtt'; // wss://mqtt.eclipse.org/mqtt
+var host_url = 'wss://mqtt.eclipse.org/mqtt';
+// host_url = 'ws://localhost:9001/mqtt';
 var host_client = 'client' + Math.floor(Math.random() * 1000) + Math.floor(Math.random() * 1000);
 var topic_base = 'test/test/';
 var topic_comment = window.topic_base + 'comment';
@@ -139,7 +140,7 @@ function receiveNote(txt) {
 		return;
 	while(dest.firstChild)
 		dest.removeChild(dest.lastChild);
-	if(!tmp || !txt)
+	if(!tmpl || !txt)
 		return;
 	tmpl = tmpl.firstElementChild.cloneNode(true);
 	tmpl.getElementsByTagName('h2')[0].appendChild(document.createTextNode(txt));
