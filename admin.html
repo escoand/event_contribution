@@ -22,9 +22,11 @@
 		<div id="note-top" class="card fluid warning"><h2 class="section">{{text}}</h2></div>
 	</script>
 	<script id="template-message" type="text/template">
-		<div id="message-{{id}}" class="card">
-			<blockquote class="section">{{text}}</blockquote>
-			<mark class="tag tertiary absolute-top-right">{{likes}}</mark>
+		<div id="message-{{id}}">
+			<blockquote>
+				{{text}}
+				<mark class="tag tertiary absolute-top-right">{{likes}}</mark>
+			</blockquote>
 		</div>
 	</script>
 </head>

@@ -9,7 +9,8 @@ var topic_message = window.topic_base + 'message';
 var topic_like = window.topic_base + 'like';
 var topic_stats = '$SYS/broker/clients';
 var mqtt;
-var connect_count = 0;
+var connect_count = 1;
+var messages = {};
 
 document.addEventListener('DOMContentLoaded', connect);
 
@@ -22,12 +23,12 @@ function random_id() {
 }
 
 function connect() {
-	if (window.connect_count >= 5)
+	if (window.connect_count > 5)
 		return;
 	window.mqtt = new Paho.Client(window.host_url, window.host_client);
 	window.mqtt.onMessageArrived = onReceive;
 	window.mqtt.onConnectionLost = onConnectionLost;
-	showToast('Verbinde zum Server');
+	showToast('Verbinde zum Server (Versuch ' + window.connect_count + ')');
 	try {
 		window.mqtt.connect({
 			onSuccess: onConnect,
@@ -70,6 +71,7 @@ function onConnect() {
 		window.mqtt.subscribe(window.topic_comment);
 		window.mqtt.subscribe(window.topic_note);
 		window.mqtt.subscribe(window.topic_message + '/+');
+		window.mqtt.subscribe(window.topic_like + '/+');
 		window.mqtt.subscribe(window.topic_stats + '/#');
 		var btn = document.getElementById('comment-edit');
 		if (btn) {
@@ -107,8 +109,12 @@ function onReceive(msg) {
 	// message
 	else if (msg.destinationName.startsWith(window.topic_message + '/')) {
 		var subtopic = msg.destinationName.substr(window.topic_message.length + 1);
-		var paths = subtopic.split('/');
-		receiveMessage(paths[0], msg.payloadString);
+		receiveMessage(subtopic, msg.payloadString);
+	}
+	// like
+	else if (msg.destinationName.startsWith(window.topic_like + '/')) {
+		var subtopic = msg.destinationName.substr(window.topic_like.length + 1);
+		receiveLike(subtopic);
 	}
 	// unknown
 	else {
@@ -129,7 +135,8 @@ function addFromTemplate(tmplId, destId, data) {
 		tmp = tmp.firstElementChild;
 		var old = document.getElementById(tmp.id);
 		if (old) {
-			return old.parentNode.replaceChild(tmp, old);
+			old.parentNode.replaceChild(tmp, old);
+			return tmp;
 		} else {
 			return dest.appendChild(tmp);
 		}
@@ -164,26 +171,17 @@ function receiveComment(txt) {
 	if (elem) {
 		var btn = elem.getElementsByTagName('button');
 		if (btn && btn[0]) {
-			btn[0].addEventListener('click', takeComment);
+			btn[0].addEventListener('click', function () {
+				if (confirm('Diesen Kommentar wirklich übernehmen?')) {
+					var elem = this.closest('.card');
+					var txt = elem.getElementsByTagName('blockquote')[0].innerHTML;
+					sendMessage(random_id(), txt);
+					elem.remove();
+				}
+			});
 		}
 		if (btn && btn[1]) {
 			btn[1].addEventListener('click', deleteComment);
-		}
-	}
-}
-
-function takeComment() {
-	if (confirm('Diesen Kommentar wirklich übernehmen?')) {
-		try {
-			showToast();
-			var elem = this.closest('.card');
-			var txt = elem.getElementsByTagName('blockquote')[0].innerHTML;
-			var data = JSON.stringify({ text: txt, likes: 0 });
-			window.mqtt.send(window.topic_message + '/' + random_id(), data, 0, true);
-			elem.remove();
-		} catch (err) {
-			console.log(err);
-			showToast('FEHLER: Versuche es erneut.');
 		}
 	}
 }
@@ -214,16 +212,26 @@ function receiveNote(txt) {
 	}
 }
 
+function sendMessage(id, txt, likes) {
+	try {
+		showToast();
+		var data = JSON.stringify({ text: txt, likes: likes ? likes : 0 });
+		window.mqtt.send(window.topic_message + '/' + id, data, 0, true);
+	} catch (err) {
+		console.log(err);
+		showToast('FEHLER: Versuche es erneut.');
+	}
+}
+
 function receiveMessage(id, data) {
 	var data = JSON.parse(data);
+	window.messages[id] = data;
 	data['id'] = id;
-	if (!data['likes'])
-		data['likes'] = 0;
 	var elem = addFromTemplate('template-message', 'message-stream', data);
-	if (elem && elem.getElementById) {
-		var btn = elem.getElementById('button-like');
-		if (btn) {
-			btn.addEventListener('click', function () {
+	if (elem) {
+		var btn = elem.getElementsByTagName('button');
+		if (btn && btn[0]) {
+			btn[0].addEventListener('click', function () {
 				likeMessage(this.getAttribute('data-id'));
 			});
 		}
@@ -232,4 +240,8 @@ function receiveMessage(id, data) {
 
 function likeMessage(id) {
 	window.mqtt.send(window.topic_like + '/' + id, '');
+}
+
+function receiveLike(id) {
+	sendMessage(id, window.messages[id]['text'], window.messages[id]['likes'] + 1);
 }
