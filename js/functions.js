@@ -102,8 +102,8 @@ function onReceive(msg) {
 	// message
 	else if (msg.destinationName.startsWith(window.topic_message + '/')) {
 		var subtopic = msg.destinationName.substr(window.topic_message.length + 1);
-		var id = subtopic.split('/')[0];
-		receiveMessage(id, msg.payloadString);
+		var paths = subtopic.split('/');
+		receiveMessage(paths[0], msg.payloadString);
 	}
 	// unknown
 	else {
