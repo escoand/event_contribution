@@ -6,8 +6,10 @@ var topic_base = 'test/test/';
 var topic_comment = window.topic_base + 'comment';
 var topic_note = window.topic_base + 'note';
 var topic_message = window.topic_base + 'message';
+var topic_like = window.topic_base + 'like';
 var topic_stats = '$SYS/broker/clients';
 var mqtt;
+var connect_count = 0;
 
 document.addEventListener('DOMContentLoaded', connect);
 
@@ -20,6 +22,8 @@ function random_id() {
 }
 
 function connect() {
+	if (window.connect_count >= 5)
+		return;
 	window.mqtt = new Paho.Client(window.host_url, window.host_client);
 	window.mqtt.onMessageArrived = onReceive;
 	window.mqtt.onConnectionLost = onConnectionLost;
@@ -29,6 +33,7 @@ function connect() {
 			onSuccess: onConnect,
 			onFailure: onFailure
 		});
+		window.connect_count++;
 	} catch (err) {
 		console.log(err);
 		showToast('FEHLER: Versuche die Seite neu zu laden.');
@@ -64,18 +69,18 @@ function onConnect() {
 	try {
 		window.mqtt.subscribe(window.topic_comment);
 		window.mqtt.subscribe(window.topic_note);
-		window.mqtt.subscribe(window.topic_message + '/+/+');
+		window.mqtt.subscribe(window.topic_message + '/+');
 		window.mqtt.subscribe(window.topic_stats + '/#');
 		var btn = document.getElementById('comment-edit');
 		if (btn) {
-			btn.addEventListener('keypress', function(evt) {
+			btn.addEventListener('keypress', function (evt) {
 				if (evt.key == 'Enter')
 					if (sendComment(this.value)) this.value = '';
 			});
 		}
 		btn = document.getElementById('note-edit');
 		if (btn) {
-			btn.addEventListener('keypress', function(evt) {
+			btn.addEventListener('keypress', function (evt) {
 				if (evt.key == 'Enter')
 					if (sendNote(this.value)) this.value = '';
 			});
@@ -111,27 +116,31 @@ function onReceive(msg) {
 	}
 }
 
-function addFromTemplate(destId, tmplId, clear) {
-	var dest = document.getElementById(destId);
+function addFromTemplate(tmplId, destId, data) {
 	var tmpl = document.getElementById(tmplId);
-	if (!dest) {
-		return;
-	}
-	if (clear == true) {
-		while (dest.firstChild) {
-			dest.removeChild(dest.lastChild);
+	var dest = document.getElementById(destId);
+	if (tmpl && dest) {
+		var html = tmpl.innerHTML;
+		for (var key in data) {
+			html = html.split('{{' + key + '}}').join(data[key]);
 		}
-	}
-	if (tmpl) {
-		tmpl = tmpl.firstElementChild.cloneNode(true);
-		dest.appendChild(tmpl);
-		return tmpl;
+		var tmp = document.createElement('div');
+		tmp.innerHTML = html;
+		tmp = tmp.firstElementChild;
+		var old = document.getElementById(tmp.id);
+		if (old) {
+			return old.parentNode.replaceChild(tmp, old);
+		} else {
+			return dest.appendChild(tmp);
+		}
 	}
 }
 
 function receiveStats(topic, txt) {
 	if (topic == window.topic_stats + '/connected') {
-		document.getElementById('stats-clients').innerHTML = txt;
+		var dest = document.getElementById('stats-clients');
+		if (dest)
+			dest.innerHTML = txt;
 	}
 }
 
@@ -150,10 +159,9 @@ function sendComment(txt) {
 }
 
 function receiveComment(txt) {
-	var elem = addFromTemplate('comment-stream', 'template-comment');
+	var data = { text: txt, date: new Date().toLocaleString() };
+	var elem = addFromTemplate('template-comment', 'comment-stream', data);
 	if (elem) {
-		elem.getElementsByTagName('blockquote')[0].appendChild(document.createTextNode(txt));
-		elem.getElementsByTagName('blockquote')[0].setAttribute('cite', new Date().toLocaleString());
 		var btn = elem.getElementsByTagName('button');
 		if (btn && btn[0]) {
 			btn[0].addEventListener('click', takeComment);
@@ -170,7 +178,8 @@ function takeComment() {
 			showToast();
 			var elem = this.closest('.card');
 			var txt = elem.getElementsByTagName('blockquote')[0].innerHTML;
-			window.mqtt.send(window.topic_message + '/' + random_id() + '/text', txt, 0, true);
+			var data = JSON.stringify({ text: txt, likes: 0 });
+			window.mqtt.send(window.topic_message + '/' + random_id(), data, 0, true);
 			elem.remove();
 		} catch (err) {
 			console.log(err);
@@ -198,18 +207,29 @@ function sendNote(txt) {
 }
 
 function receiveNote(txt) {
-	var elem = addFromTemplate('note-stream', 'template-note', true);
-	if (elem && txt) {
-		elem.getElementsByTagName('h2')[0].appendChild(document.createTextNode(txt));
-	} else if (elem) {
+	var data = { text: txt };
+	var elem = addFromTemplate('template-note', 'note-stream', data);
+	if (elem && !txt) {
 		elem.remove();
 	}
 }
 
-function receiveMessage(id, txt) {
-	var elem = addFromTemplate('message-stream', 'template-message');
-	if (elem) {
-		elem.setAttribute('id', 'message-' + id);
-		elem.getElementsByTagName('blockquote')[0].appendChild(document.createTextNode(txt));
+function receiveMessage(id, data) {
+	var data = JSON.parse(data);
+	data['id'] = id;
+	if (!data['likes'])
+		data['likes'] = 0;
+	var elem = addFromTemplate('template-message', 'message-stream', data);
+	if (elem && elem.getElementById) {
+		var btn = elem.getElementById('button-like');
+		if (btn) {
+			btn.addEventListener('click', function () {
+				likeMessage(this.getAttribute('data-id'));
+			});
+		}
 	}
+}
+
+function likeMessage(id) {
+	window.mqtt.send(window.topic_like + '/' + id, '');
 }

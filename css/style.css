@@ -3,6 +3,7 @@
 .container-right { bottom:0; position:absolute; right:0; }
 .with-footer { margin-bottom: 90px; }
 .toast { text-align:center; }
+.absolute-top-right { position: absolute; right: var(--universal-margin); top: var(--universal-margin); }
 
 blockquote.section { padding: calc(3 * var(--universal-padding)) !important; }
 footer { bottom:0; left:0; position:fixed; right:0; }

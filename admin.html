@@ -8,48 +8,47 @@
 	<link href="css/style.css" rel="stylesheet" />
 	<script src="js/paho-mqtt-min.js" type="text/javascript"></script>
 	<script src="js/functions.js" type="text/javascript"></script>
+	<!-- templates -->
+	<script id="template-comment" type="text/template">
+		<div class="card fluid">
+			<blockquote class="section" cite="{{date}}">{{text}}</blockquote>
+			<div class="buttons">
+				<button id="button-take" data-id="{{id}}" class="small tertiary">Übernehmen</button>
+				<button id="button-delete" data-id="{{id}}" class="small secondary">Löschen</button>
+			</div>
+		</div>
+	</script>
+	<script id="template-note" type="text/template">
+		<div id="note-top" class="card fluid warning"><h2 class="section">{{text}}</h2></div>
+	</script>
+	<script id="template-message" type="text/template">
+		<div id="message-{{id}}" class="card">
+			<blockquote class="section">{{text}}</blockquote>
+			<mark class="tag tertiary absolute-top-right">{{likes}}</mark>
+		</div>
+	</script>
 </head>
 <body>
 	<div class="row">
-
 		<div class="col-sm-12 col-md-9 col-lg-9">
 			<div class="container-relative">
 				<div class="container-right">Clients: <span id="stats-clients">?</span></div>
 				<h2>Kommentare</h2>
 			</div>
-			<div class="row cols-sm">
+			<div class="input-group fluid">
 				<input id="comment-edit" type="text" placeholder="&#128172; Neuer Kommentar" />
 			</div>
 			<div id="comment-stream" class="row"></div>
 		</div>
-
 		<div class="col-sm-12 col-md-3 col-lg-3">
 			<h2>Vorschau</h2>
-			<div class="row cols-sm">
+			<div class="input-group fluid">
 				<input id="note-edit" type="text" placeholder="&#128172; Neue Info" />
 			</div>
 			<div id="note-stream"></div>
 			<div id="message-stream" class="row cols-sm-12 cols-md-6 cols-lg-4"></div>
 		</div>
-
 	</div>
-
 	<span id="toast" class="toast">Laden</span>
-
-	<div id="template-comment" class="hidden">
-		<div class="card fluid">
-			<blockquote class="section" cite=""></blockquote>
-			<div class="buttons">
-				<button id="button-take" class="small tertiary">Übernehmen</button>
-				<button class="small secondary">Löschen</button>
-			</div>
-		</div>
-	</div>
-	<div id="template-note" class="hidden">
-		<div class="card fluid warning"><h2 class="section"></h2></div>
-	</div>
-	<div id="template-message" class="hidden">
-		<div><blockquote></blockquote></div>
-	</div>
 </body>
 </html>
