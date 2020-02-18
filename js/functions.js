@@ -1,6 +1,4 @@
-var host_name = 'localhost'; // 'mqtt.eclipse.org'
-var host_port = 9001;
-var host_path = '/mqtt';
+var host_url = 'ws://localhost:9001/mqtt'; // wss://mqtt.eclipse.org/mqtt
 var host_client = 'client' + Math.floor(Math.random() * 1000) + Math.floor(Math.random() * 1000);
 var topic_base = 'test/test/';
 var topic_comment = window.topic_base + 'comment';
@@ -9,7 +7,7 @@ var topic_message = window.topic_base + 'message';
 var mqtt;
 
 document.addEventListener('DOMContentLoaded', function() {
-	window.mqtt = new Paho.Client(window.host_name, window.host_port, window.host_path, window.host_client);
+	window.mqtt = new Paho.Client(window.host_url, window.host_client);
 	window.mqtt.onMessageArrived = onReceive;
 	window.mqtt.onConnectionLost = onConnectionLost;
 	showToast('Verbinde zum Server');
