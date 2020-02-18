@@ -1,4 +1,6 @@
 .buttons { text-align:right; }
+.container-relative { position:relative; }
+.container-right { bottom:0; position:absolute; right:0; }
 .with-footer { margin-bottom: 90px; }
 .toast { text-align:center; }
 
