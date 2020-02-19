@@ -257,6 +257,7 @@ function likeMessage(evt) {
 		if (liked.indexOf(this.dataset.id) == -1) {
 			liked.push(this.dataset.id);
 			document.cookie = 'liked=' + JSON.stringify(liked);
+			document.cookie = 'max-age=' + (6 * 60 * 60);
 			send(window.topic_like + '/' + this.dataset.id, '');
 		}
 	}
