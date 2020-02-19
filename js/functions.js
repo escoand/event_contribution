@@ -137,7 +137,7 @@ function addFromTemplate(tmplId, destId, data) {
 		// bind click
 		tmp.querySelectorAll('[data-bind-click]').forEach(function (elem) {
 			try {
-				var func = eval(elem.getAttribute('data-bind-click'));
+				var func = eval(elem.dataset.bindClick);
 				elem.addEventListener('click', func);
 			} catch {
 				console.log('unable to bind function', elem);
@@ -236,8 +236,9 @@ function receiveMessage(id, data) {
 }
 
 function likeMessage(evt) {
-	var id = this.getAttribute('data-id');
-	window.mqtt.send(window.topic_like + '/' + id, '');
+	if (this.dataset.id) {
+		window.mqtt.send(window.topic_like + '/' + this.dataset.id, '');
+	}
 }
 
 function receiveLike(id) {
