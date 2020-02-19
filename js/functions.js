@@ -133,6 +133,7 @@ function addFromTemplate(tmplId, destId, data) {
 		var tmp = document.createElement('div');
 		tmp.innerHTML = html;
 		tmp = tmp.firstElementChild;
+		// bind click
 		tmp.querySelectorAll('[data-bind-click]').forEach(function (elem) {
 			try {
 				var func = eval(elem.getAttribute('data-bind-click'));
@@ -141,13 +142,14 @@ function addFromTemplate(tmplId, destId, data) {
 				console.log('unable to bind function', elem);
 			}
 		});
-		var old = document.getElementById(tmp.id);
-		if (old) {
-			old.parentNode.replaceChild(tmp, old);
-			return tmp;
-		} else {
-			return dest.appendChild(tmp);
+		if (tmp.id) {
+			var old = document.getElementById(tmp.id);
+			if (old) {
+				old.parentNode.replaceChild(tmp, old);
+				return tmp;
+			}
 		}
+		return dest.appendChild(tmp);
 	}
 }
 
@@ -176,25 +178,18 @@ function sendComment(txt) {
 function receiveComment(txt) {
 	var data = { text: txt, date: new Date().toLocaleString() };
 	var elem = addFromTemplate('template-comment', 'comment-stream', data);
-	if (elem) {
-		var btn = elem.getElementsByTagName('button');
-		if (btn && btn[0]) {
-			btn[0].addEventListener('click', function () {
-				if (confirm('Diesen Kommentar wirklich übernehmen?')) {
-					var elem = this.closest('.card');
-					var txt = elem.getElementsByTagName('blockquote')[0].innerHTML;
-					sendMessage(random_id(), txt);
-					elem.remove();
-				}
-			});
-		}
-		if (btn && btn[1]) {
-			btn[1].addEventListener('click', deleteComment);
-		}
+}
+
+function takeComment(evt) {
+	if (confirm('Diesen Kommentar wirklich übernehmen?')) {
+		var elem = this.closest('.card');
+		var txt = elem.getElementsByTagName('blockquote')[0].innerHTML;
+		sendMessage(random_id(), txt);
+		elem.remove();
 	}
 }
 
-function deleteComment() {
+function deleteComment(evt) {
 	if (confirm('Diesen Kommentar wirklich löschen?')) {
 		this.closest('.card').remove();
 	}
@@ -236,14 +231,6 @@ function receiveMessage(id, data) {
 	window.messages[id] = data;
 	data['id'] = id;
 	var elem = addFromTemplate('template-message', 'message-stream', data);
-	if (elem) {
-		var btn = elem.getElementsByTagName('button');
-		if (btn && btn[0]) {
-			btn[0].addEventListener('click', function () {
-				likeMessage(this.getAttribute('data-id'));
-			});
-		}
-	}
 }
 
 function likeMessage(evt) {

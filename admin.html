@@ -15,8 +15,8 @@
 		<div class="card fluid">
 			<blockquote class="section" cite="{{date}}">{{text}}</blockquote>
 			<div class="buttons">
-				<button id="button-take" data-id="{{id}}" class="small tertiary">Übernehmen</button>
-				<button id="button-delete" data-id="{{id}}" class="small secondary">Löschen</button>
+				<button data-bind-click="takeComment" class="small tertiary">Übernehmen</button>
+				<button data-bind-click="deleteComment" class="small secondary">Löschen</button>
 			</div>
 		</div>
 	</script>
