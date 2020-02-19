@@ -226,13 +226,19 @@ function sendMessage(id, txt, likes) {
 }
 
 function receiveMessage(id, data) {
-	var data = JSON.parse(data);
-	window.messages[id] = data;
-	data['id'] = id;
-	var elem = addFromTemplate('template-message', 'message-stream', data);
-	if (elem && !data['text']) {
-		elem.remove();
-		delete window.messages[id];
+	if (data) {
+		var data = JSON.parse(data);
+		window.messages[id] = data;
+		data['id'] = id;
+		var elem = addFromTemplate('template-message', 'message-stream', data);
+	} else {
+		var elem = document.getElementById('message-' + id);
+		if (elem) {
+			elem.remove();
+		}
+		if (window.messages[id]) {
+			delete window.messages[id];
+		}
 	}
 }
 
