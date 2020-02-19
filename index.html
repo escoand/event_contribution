@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+
 <head>
 	<title>Kommentare</title>
 	<meta charset="utf-8" />
@@ -8,20 +9,22 @@
 	<link href="css/style.css" rel="stylesheet" />
 	<script src="js/paho-mqtt-min.js" type="text/javascript"></script>
 	<script src="js/functions.js" type="text/javascript"></script>
+
 	<!-- templates -->
 	<script id="template-note" type="text/template">
 		<div id="note-top" class="card fluid warning"><h2 class="section">{{text}}</h2></div>
 	</script>
 	<script id="template-message" type="text/template">
-		<div id="message-{{id}}" class="card fluid">
-			<blockquote class="section">{{text}}</blockquote>
-			<mark class="tag tertiary absolute-top-right">{{likes}}</mark>
-			<div class="buttons">
-				<button id="button-like" class="small tertiary" data-id="{{id}}">&#128077; Like</button>
-			</div>
+		<div id="message-{{id}}">
+			<blockquote class="section">
+				{{text}}
+				<mark id="button-like" class="button tag tertiary absolute-top-right" data-id="{{id}}">&#128077; {{likes}}</mark>
+			</blockquote>
 		</div>
 	</script>
+
 </head>
+
 <body>
 	<div class="with-footer">
 		<div id="note-stream"></div>
@@ -32,4 +35,5 @@
 	</footer>
 	<span id="toast" class="toast">Laden</span>
 </body>
+
 </html>

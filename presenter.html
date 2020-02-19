@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+
 <head>
 	<title>Presenter</title>
 	<meta charset="utf-8" />
@@ -8,6 +9,7 @@
 	<link href="css/style.css" rel="stylesheet" />
 	<script src="js/paho-mqtt-min.js" type="text/javascript"></script>
 	<script src="js/functions.js" type="text/javascript"></script>
+
 	<!-- templates -->
 	<script id="template-note" type="text/template">
 		<div id="note-top" class="card fluid warning"><h2 class="section">{{text}}</h2></div>
@@ -16,11 +18,13 @@
 		<div id="message-{{id}}">
 			<blockquote>
 				{{text}}
-				<mark class="tag tertiary absolute-top-right">{{likes}}</mark>
+				<mark class="tag tertiary absolute-top-right">&#128077; {{likes}}</mark>
 			</blockquote>
 		</div>
 	</script>
+
 </head>
+
 <body>
 	<div>
 		<div id="note-stream"></div>
@@ -28,4 +32,5 @@
 	</div>
 	<span id="toast" class="toast">Laden</span>
 </body>
+
 </html>
