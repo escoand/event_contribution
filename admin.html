@@ -12,12 +12,12 @@
 
 	<!-- templates -->
 	<script id="template-comment" type="text/template">
-		<div>
+		<div id="comment-{{id}}">
 			<blockquote cite="{{date}}">
 				{{text}}
 				<div class="absolute-top-right">
-					<mark data-bind-click="takeComment" class="button tag tertiary">Übernehmen</mark>
-					<mark data-bind-click="deleteComment" class="button tag secondary">Löschen</mark>
+					<mark data-id="{{id}}" data-bind-click="takeComment" class="button tag tertiary">Übernehmen</mark>
+					<mark data-id="{{id}}" data-bind-click="deleteComment" class="button tag secondary">Löschen</mark>
 				</div>
 			</blockquote>
 		</div>
@@ -44,20 +44,20 @@
 		<div class="col-sm-12 col-md-8">
 			<div class="container-relative">
 				<div class="container-right">Clients: <span id="stats-clients">?</span></div>
-				<h2>Kommentare</h2>
+				<h2>Eingang <tiny><a href="index.html" target="_blank">&#128279;</a></tiny></h2>
 			</div>
 			<div class="input-group fluid">
-				<input data-bind-keypress="sendComment" type="text" placeholder="&#128172; Neuer Kommentar" />
+				<input data-bind-keypress="sendComment" type="text" placeholder="&#128172; Neue Nachricht" />
 			</div>
-			<div id="comment-stream" class="row cols-sm-12 cols-md-4"></div>
+			<div id="comment-stream" class="row cols-sm-12 cols-lg-6"></div>
 		</div>
 		<div class="col-sm-12 col-md-4">
-			<h2>Vorschau</h2>
+			<h2>Ausgang <tiny><a href="presenter.html" target="_blank">&#128279;</a></tiny></h2>
 			<div class="input-group fluid">
 				<input data-bind-keypress="sendNote" type="text" placeholder="&#128172; Neue Info" />
 			</div>
 			<div id="note-stream"></div>
-			<div id="message-stream" class="row cols-sm-12 cols-md-6 cols-lg-4"></div>
+			<div id="message-stream" class="row cols-sm-12 cols-lg-6"></div>
 		</div>
 	</div>
 	<span id="toast" class="toast">Laden</span>
