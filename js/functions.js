@@ -1,4 +1,3 @@
-/* https://beautifier.io/ */
 var host_url = 'wss://mqtt.eclipse.org/mqtt';
 // window.host_url = 'ws://localhost:9001/mqtt';
 var host_client = 'client' + Math.floor(Math.random() * 1000) + Math.floor(Math.random() * 1000);
