@@ -12,16 +12,18 @@
 
 	<!-- templates -->
 	<script id="template-comment" type="text/template">
-		<div class="card fluid">
-			<blockquote class="section" cite="{{date}}">{{text}}</blockquote>
-			<div class="buttons">
-				<button data-bind-click="takeComment" class="small tertiary">Übernehmen</button>
-				<button data-bind-click="deleteComment" class="small secondary">Löschen</button>
-			</div>
+		<div>
+			<blockquote cite="{{date}}">
+				{{text}}
+				<div class="absolute-top-right">
+					<mark data-bind-click="takeComment" class="button tag tertiary">Übernehmen</mark>
+					<mark data-bind-click="deleteComment" class="button tag secondary">Löschen</mark>
+				</div>
+			</blockquote>
 		</div>
 	</script>
 	<script id="template-note" type="text/template">
-		<div id="note-top" class="card fluid warning"><h2 class="section">{{text}}</h2></div>
+		<div id="note-top" class="card fluid warning"><h2>{{text}}</h2></div>
 	</script>
 	<script id="template-message" type="text/template">
 		<div id="message-{{id}}">
@@ -36,7 +38,7 @@
 
 <body data-is-admin="true">
 	<div class="row">
-		<div class="col-sm-12 col-md-9 col-lg-9">
+		<div class="col-sm-12 col-md-8">
 			<div class="container-relative">
 				<div class="container-right">Clients: <span id="stats-clients">?</span></div>
 				<h2>Kommentare</h2>
@@ -44,9 +46,9 @@
 			<div class="input-group fluid">
 				<input data-bind-keypress="sendComment" type="text" placeholder="&#128172; Neuer Kommentar" />
 			</div>
-			<div id="comment-stream" class="row"></div>
+			<div id="comment-stream" class="row cols-sm-4"></div>
 		</div>
-		<div class="col-sm-12 col-md-3 col-lg-3">
+		<div class="col-sm-12 col-md-4">
 			<h2>Vorschau</h2>
 			<div class="input-group fluid">
 				<input data-bind-keypress="sendNote" type="text" placeholder="&#128172; Neue Info" />

@@ -12,11 +12,11 @@
 
 	<!-- templates -->
 	<script id="template-note" type="text/template">
-		<div id="note-top" class="card fluid warning"><h2 class="section">{{text}}</h2></div>
+		<div id="note-top" class="card fluid warning"><h2>{{text}}</h2></div>
 	</script>
 	<script id="template-message" type="text/template">
 		<div id="message-{{id}}">
-			<blockquote class="section">
+			<blockquote>
 				{{text}}
 				<mark data-id="{{id}}" data-bind-click="likeMessage" class="button tag tertiary absolute-top-right">&#128077; {{likes}}</mark>
 			</blockquote>
@@ -26,7 +26,7 @@
 </head>
 
 <body>
-	<div class="with-footer">
+	<div class="has-footer">
 		<div id="note-stream"></div>
 		<div id="message-stream" class="row cols-sm-12 cols-md-6 cols-lg-4"></div>
 	</div>
