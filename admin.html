@@ -34,7 +34,7 @@
 
 </head>
 
-<body>
+<body data-is-admin="true">
 	<div class="row">
 		<div class="col-sm-12 col-md-9 col-lg-9">
 			<div class="container-relative">
@@ -42,14 +42,14 @@
 				<h2>Kommentare</h2>
 			</div>
 			<div class="input-group fluid">
-				<input id="comment-edit" type="text" placeholder="&#128172; Neuer Kommentar" />
+				<input data-bind-keypress="sendComment" type="text" placeholder="&#128172; Neuer Kommentar" />
 			</div>
 			<div id="comment-stream" class="row"></div>
 		</div>
 		<div class="col-sm-12 col-md-3 col-lg-3">
 			<h2>Vorschau</h2>
 			<div class="input-group fluid">
-				<input id="note-edit" type="text" placeholder="&#128172; Neue Info" />
+				<input data-bind-keypress="sendNote" type="text" placeholder="&#128172; Neue Info" />
 			</div>
 			<div id="note-stream"></div>
 			<div id="message-stream" class="row cols-sm-12 cols-md-6 cols-lg-4"></div>

@@ -22,12 +22,13 @@ function random_id() {
 }
 
 function connect() {
-	if (window.connect_count > 5)
+	if (window.connect_count > 5) {
 		return;
+	}
 	window.mqtt = new Paho.Client(window.host_url, window.host_client);
 	window.mqtt.onMessageArrived = onReceive;
 	window.mqtt.onConnectionLost = onConnectionLost;
-	showToast('Verbinde zum Server (Versuch ' + window.connect_count + ')');
+	showToast('Verbinde zum Server' + (window.connect_count > 1 ? ' (Versuch ' + window.connect_count + ')' : ''));
 	try {
 		window.mqtt.connect({
 			onSuccess: onConnect,
@@ -67,25 +68,22 @@ function onConnectionLost(err) {
 function onConnect() {
 	showToast();
 	try {
-		window.mqtt.subscribe(window.topic_comment);
 		window.mqtt.subscribe(window.topic_note);
 		window.mqtt.subscribe(window.topic_message + '/+');
-		window.mqtt.subscribe(window.topic_like + '/+');
-		window.mqtt.subscribe(window.topic_stats + '/#');
-		var btn = document.getElementById('comment-edit');
-		if (btn) {
-			btn.addEventListener('keypress', function (evt) {
-				if (evt.key == 'Enter')
-					if (sendComment(this.value)) this.value = '';
-			});
+		if (document.querySelector('body[data-is-admin]')) {
+			window.mqtt.subscribe(window.topic_comment);
+			window.mqtt.subscribe(window.topic_like + '/+');
+			window.mqtt.subscribe(window.topic_stats + '/#');
 		}
-		btn = document.getElementById('note-edit');
-		if (btn) {
-			btn.addEventListener('keypress', function (evt) {
-				if (evt.key == 'Enter')
-					if (sendNote(this.value)) this.value = '';
-			});
-		}
+		// bind keypress
+		document.querySelectorAll('[data-bind-keypress]').forEach(function (elem) {
+			try {
+				var func = eval(elem.dataset.bindKeypress);
+				elem.addEventListener('keypress', func);
+			} catch {
+				console.log('unable to bind function', elem);
+			}
+		});
 	} catch (err) {
 		console.log(err);
 		showToast('FEHLER: Versuche die Seite neu zu laden.');
@@ -162,18 +160,17 @@ function receiveStats(topic, txt) {
 	}
 }
 
-function sendComment(txt) {
-	if (txt) {
+function sendComment(evt) {
+	if (evt.key == 'Enter' && this.value) {
 		try {
 			showToast();
-			window.mqtt.send(window.topic_comment, txt);
+			window.mqtt.send(window.topic_comment, this.value);
+			this.value = '';
 		} catch (err) {
 			console.log(err);
 			showToast('FEHLER: Versuche es erneut.');
-			return false;
 		}
 	}
-	return true;
 }
 
 function receiveComment(txt) {
@@ -196,16 +193,17 @@ function deleteComment(evt) {
 	}
 }
 
-function sendNote(txt) {
-	try {
-		showToast();
-		window.mqtt.send(window.topic_note, txt, 0, true);
-	} catch (err) {
-		console.log(err);
-		showToast('FEHLER: Versuche es erneut.');
-		return false;
+function sendNote(evt) {
+	if (evt.key == 'Enter' && this.value) {
+		try {
+			showToast();
+			window.mqtt.send(window.topic_note, this.value, 0, true);
+			this.value = '';
+		} catch (err) {
+			console.log(err);
+			showToast('FEHLER: Versuche es erneut.');
+		}
 	}
-	return true;
 }
 
 function receiveNote(txt) {
@@ -241,5 +239,7 @@ function likeMessage(evt) {
 }
 
 function receiveLike(id) {
-	sendMessage(id, window.messages[id]['text'], window.messages[id]['likes'] + 1);
+	if (window.messages[id]) {
+		sendMessage(id, window.messages[id]['text'], window.messages[id]['likes'] + 1);
+	}
 }
