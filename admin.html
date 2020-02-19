@@ -29,7 +29,10 @@
 		<div id="message-{{id}}">
 			<blockquote>
 				{{text}}
-				<mark class="tag tertiary absolute-top-right">&#128077; {{likes}}</mark>
+				<div class="absolute-top-right">
+					<mark class="tag tertiary">&#128077; {{likes}}</mark>
+					<mark data-bind-click="deleteMessage" class="button tag secondary">Löschen</mark>
+				</div>
 			</blockquote>
 		</div>
 	</script>
