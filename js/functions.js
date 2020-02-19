@@ -244,7 +244,21 @@ function receiveMessage(id, data) {
 
 function likeMessage(evt) {
 	if (this.dataset.id) {
-		send(window.topic_like + '/' + this.dataset.id, '');
+		// cookie
+		var liked = [];
+		try {
+			var value = "; " + document.cookie;
+			var parts = value.split("; liked=");
+			if (parts.length == 2) {
+				liked = JSON.parse(parts.pop().split(";").shift());
+			}
+		} catch { }
+		// like if unliked
+		if (liked.indexOf(this.dataset.id) == -1) {
+			liked.push(this.dataset.id);
+			document.cookie = 'liked=' + JSON.stringify(liked);
+			send(window.topic_like + '/' + this.dataset.id, '');
+		}
 	}
 }
 
