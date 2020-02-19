@@ -18,7 +18,7 @@
 		<div id="message-{{id}}">
 			<blockquote class="section">
 				{{text}}
-				<mark id="button-like" class="button tag tertiary absolute-top-right" data-id="{{id}}">&#128077; {{likes}}</mark>
+				<mark data-id="{{id}}" data-bind-click="likeMessage" class="button tag tertiary absolute-top-right">&#128077; {{likes}}</mark>
 			</blockquote>
 		</div>
 	</script>

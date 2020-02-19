@@ -133,6 +133,14 @@ function addFromTemplate(tmplId, destId, data) {
 		var tmp = document.createElement('div');
 		tmp.innerHTML = html;
 		tmp = tmp.firstElementChild;
+		tmp.querySelectorAll('[data-bind-click]').forEach(function (elem) {
+			try {
+				var func = eval(elem.getAttribute('data-bind-click'));
+				elem.addEventListener('click', func);
+			} catch {
+				console.log('unable to bind function', elem);
+			}
+		});
 		var old = document.getElementById(tmp.id);
 		if (old) {
 			old.parentNode.replaceChild(tmp, old);
@@ -238,7 +246,8 @@ function receiveMessage(id, data) {
 	}
 }
 
-function likeMessage(id) {
+function likeMessage(evt) {
+	var id = this.getAttribute('data-id');
 	window.mqtt.send(window.topic_like + '/' + id, '');
 }
 
