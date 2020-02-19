@@ -230,11 +230,21 @@ function receiveMessage(id, data) {
 	window.messages[id] = data;
 	data['id'] = id;
 	var elem = addFromTemplate('template-message', 'message-stream', data);
+	if (elem && !data['text']) {
+		elem.remove();
+		delete window.messages[id];
+	}
 }
 
 function likeMessage(evt) {
 	if (this.dataset.id) {
 		window.mqtt.send(window.topic_like + '/' + this.dataset.id, '');
+	}
+}
+
+function deleteMessage(evt) {
+	if (confirm('Diese Nachricht wirklich löschen?')) {
+		window.mqtt.send(window.topic_message + '/' + this.dataset.id, '', 0, true);
 	}
 }
 
