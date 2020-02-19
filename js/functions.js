@@ -80,12 +80,12 @@ function onConnectionLost(err) {
 function onConnect() {
 	showToast();
 	try {
-		window.mqtt.subscribe(window.topic_note);
-		window.mqtt.subscribe(window.topic_message + '/+');
+		window.mqtt.subscribe(window.topic_note, { qos: 1 });
+		window.mqtt.subscribe(window.topic_message + '/+', { qos: 1 });
 		if (document.querySelector('body[data-is-admin]')) {
-			window.mqtt.subscribe(window.topic_comment + '/+');
-			window.mqtt.subscribe(window.topic_like + '/+');
-			window.mqtt.subscribe(window.topic_stats + '/#');
+			window.mqtt.subscribe(window.topic_comment + '/+', { qos: 1 });
+			window.mqtt.subscribe(window.topic_like + '/+', { qos: 1 });
+			window.mqtt.subscribe(window.topic_stats + '/#', { qos: 1 });
 		}
 		// bind keypress
 		document.querySelectorAll('[data-bind-keypress]').forEach(function (elem) {
