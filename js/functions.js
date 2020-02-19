@@ -127,6 +127,7 @@ function addFromTemplate(tmplId, destId, data) {
 	var dest = document.getElementById(destId);
 	if (tmpl && dest) {
 		var html = tmpl.innerHTML;
+		// replace data
 		for (var key in data) {
 			html = html.split('{{' + key + '}}').join(data[key]);
 		}
@@ -142,6 +143,7 @@ function addFromTemplate(tmplId, destId, data) {
 				console.log('unable to bind function', elem);
 			}
 		});
+		// replace old
 		if (tmp.id) {
 			var old = document.getElementById(tmp.id);
 			if (old) {
