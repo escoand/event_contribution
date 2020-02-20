@@ -18,9 +18,14 @@
 		<div id="message-{{id}}">
 			<blockquote>
 				{{text}}
-				<mark data-id="{{id}}" data-bind-click="likeMessage" class="button tag tertiary absolute-top-right">&#128077; {{likes}}</mark>
+				<div class="absolute-top-right">
+					<mark id="likes-{{id}}" data-id="{{id}}" data-bind-click="likeMessage" class="button tag tertiary">&#128077; {{likes}}</mark>
+				</div>
 			</blockquote>
 		</div>
+	</script>
+	<script id="template-likes-loading" type="text/template">
+		<div id="likes-{{id}}" class="spinner"></div>
 	</script>
 
 </head>
