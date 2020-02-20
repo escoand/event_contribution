@@ -255,11 +255,15 @@ function likeMessage(evt) {
 			}
 		} catch { }
 		// like if unliked
-		if (liked.indexOf(this.dataset.id) == -1) {
-			liked.push(this.dataset.id);
+		var id = this.dataset.id;
+		if (liked.indexOf(id) == -1) {
+			liked.push(id);
 			document.cookie = 'liked=' + JSON.stringify(liked);
 			document.cookie = 'max-age=' + (6 * 60 * 60);
-			send(window.topic_like + '/' + this.dataset.id + '/' + host_client, 'like', true);
+			if (send(window.topic_like + '/' + id + '/' + host_client, 'like', true)) {
+				var data = { id: id };
+				addFromTemplate('template-likes-loading', 'likes-' + id, data);
+			}
 		}
 	}
 }
