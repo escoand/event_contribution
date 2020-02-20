@@ -19,13 +19,13 @@
 			<blockquote>
 				{{text}}
 				<div class="absolute-top-right">
-					<mark id="likes-{{id}}" data-id="{{id}}" data-bind-click="likeMessage" class="button tag tertiary">&#128077; {{likes}}</mark>
+					<button id="likes-{{id}}" data-id="{{id}}" data-bind-click="likeMessage" class="tag tertiary">&#128077; {{likes}}</button>
 				</div>
 			</blockquote>
 		</div>
 	</script>
 	<script id="template-likes-loading" type="text/template">
-		<div id="likes-{{id}}" class="spinner tertiary"></div>
+		<span id="likes-{{id}}" class="tag spinner tertiary"></span>
 	</script>
 
 </head>
