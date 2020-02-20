@@ -1,8 +1,7 @@
 .absolute-top-right { margin: var(--universal-margin) !important; position: absolute; right: 0; top: 0; }
 .card h2 { text-align: center; }
-.container-relative { position: relative; }
-.container-right { bottom: 0; position: absolute; right: 0; }
 .has-footer { margin-bottom: 90px; }
+.relative { position: relative; }
 .spinner.tag { height: 1.3em; margin: 0; width: 1.3em; }
 .toast { text-align: center; }
 
