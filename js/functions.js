@@ -84,7 +84,7 @@ function onConnect() {
 		window.mqtt.subscribe(window.topic_message + '/+', { qos: 1 });
 		if (document.querySelector('body[data-is-admin]')) {
 			window.mqtt.subscribe(window.topic_comment + '/+', { qos: 1 });
-			window.mqtt.subscribe(window.topic_like + '/+', { qos: 1 });
+			window.mqtt.subscribe(window.topic_like + '/+/+', { qos: 1 });
 			window.mqtt.subscribe(window.topic_stats + '/#', { qos: 1 });
 		}
 		// bind keypress
@@ -123,7 +123,8 @@ function onReceive(msg) {
 	// like
 	else if (msg.destinationName.startsWith(window.topic_like + '/')) {
 		var subtopic = msg.destinationName.substr(window.topic_like.length + 1);
-		receiveLike(subtopic);
+		var paths = subtopic.split('/');
+		receiveLike(paths[0], paths[1], msg.payloadString);
 	}
 	// unknown
 	else {
@@ -258,7 +259,7 @@ function likeMessage(evt) {
 			liked.push(this.dataset.id);
 			document.cookie = 'liked=' + JSON.stringify(liked);
 			document.cookie = 'max-age=' + (6 * 60 * 60);
-			send(window.topic_like + '/' + this.dataset.id, '');
+			send(window.topic_like + '/' + this.dataset.id + '/' + host_client, 'like', true);
 		}
 	}
 }
@@ -271,8 +272,9 @@ function deleteMessage(evt) {
 	}
 }
 
-function receiveLike(id) {
-	if (window.data.messages[id]) {
+function receiveLike(id, client, txt) {
+	if (txt && window.data.messages[id]) {
 		sendMessage(id, window.data.messages[id].text, window.data.messages[id].likes + 1);
+		send(window.topic_like + '/' + id + '/' + client, '', true);
 	}
 }
