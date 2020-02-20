@@ -1,7 +1,7 @@
-var host_url = 'wss://mqtt.eclipse.org/mqtt';
-// window.host_url = 'ws://localhost:9001/mqtt';
+var host_url = 'ws://' + window.location.hostname + ':' + window.location.port + '/mqtt';
+// window.host_url = 'wss://mqtt.eclipse.org/mqtt';
 var host_client = 'client-' + random_id();
-var topic_base = 'test/test/';
+var topic_base = 'event/contribution/';
 var topic_comment = window.topic_base + 'comment';
 var topic_note = window.topic_base + 'note';
 var topic_message = window.topic_base + 'message';
