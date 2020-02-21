@@ -1,5 +1,5 @@
 var host_url = 'ws://' + window.location.hostname + ':' + window.location.port + '/mqtt';
-window.host_url = 'wss://mqtt.eclipse.org/mqtt';
+// window.host_url = 'wss://mqtt.eclipse.org/mqtt';
 var host_client = 'client-' + random_id();
 var topic_base = 'event/contribution/';
 var topic_comment = window.topic_base + 'comment';
@@ -286,6 +286,7 @@ function receiveLike(id, client, txt) {
 }
 
 function sortByLikes(nodes) {
+	console.log(nodes);
 	if (nodes.length) {
 		 Array.from(nodes).sort(function(elem1, elem2) {
 			return elem1.dataset.likes < elem2.dataset.likes;
