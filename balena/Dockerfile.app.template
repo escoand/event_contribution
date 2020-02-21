@@ -8,11 +8,9 @@ COPY css/ /www/css/
 COPY js/ /www/js/
 
 RUN sed -i 's/window\.location\.port/9001/g' /www/js/functions.js
-RUN mkdir /data
 
 VOLUME /data
-VOLUME /www
 
 EXPOSE 9001
 
-CMD ["/usr/sbin/mosquitto", "-c", "/etc/mosquitto/mosquitto.conf"]
+CMD ["sh", "-c", "chown mosquitto /data && /usr/sbin/mosquitto -c /etc/mosquitto/mosquitto.conf"]
