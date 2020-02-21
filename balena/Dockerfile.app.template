@@ -1,0 +1,15 @@
+FROM balenalib/%%BALENA_MACHINE_NAME%%-alpine
+
+RUN apk --no-cache add mosquitto
+
+COPY mosquitto.conf  /data/mosquitto.conf
+COPY *.html /www/
+COPY css/ /www/css/
+COPY js/ /www/js/
+
+VOLUME /data
+VOLUME /www
+
+EXPOSE 1883 9001
+
+CMD ["/usr/sbin/mosquitto", "-c", "/data/mosquitto.conf"]

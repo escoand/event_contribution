@@ -3,7 +3,9 @@ version: "2.1"
 services:
 
   event-contribution:
-    build: .
+    build:
+      context: .
+      dockerfile: balena/Dockerfile.app.template
     ports:
       - 9001:9001
     restart: always
@@ -11,7 +13,7 @@ services:
   wifi-connect:
     build:
       context: balena
-      dockerfile: Dockerfile.wifi-connect.template
+      dockerfile: Dockerfile.wifi.template
     network_mode: host
     labels:
       io.balena.features.dbus: 1
