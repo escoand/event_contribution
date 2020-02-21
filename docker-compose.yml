@@ -3,14 +3,14 @@ version: "2.4"
 services:
 
   event-contribution:
-    build: ..
+    build: .
     ports:
       - 9001:9001
     restart: always
 
   wifi-connect:
     build:
-      context: .
+      context: balena
       dockerfile: Dockerfile.wifi-connect
     network_mode: host
     labels:
