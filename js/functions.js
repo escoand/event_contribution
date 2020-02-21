@@ -286,9 +286,8 @@ function receiveLike(id, client, txt) {
 }
 
 function sortByLikes(nodes) {
-	if (nodes) {
-		var arr = Array.prototype.slice.call(nodes, 0);
-		arr = arr.sort(function(elem1, elem2) {
+	if (nodes.length) {
+		 Array.from(nodes).sort(function(elem1, elem2) {
 			return elem1.dataset.likes < elem2.dataset.likes;
 		}).forEach(function(elem) {
 			elem.parentNode.appendChild(elem);
