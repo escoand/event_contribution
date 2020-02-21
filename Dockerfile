@@ -6,7 +6,9 @@ COPY css/ /www/css/
 COPY js/ /www/js/
 
 RUN mkdir /data
+
 VOLUME /data
+VOLUME /www
 
 EXPOSE 1883 9001
 
