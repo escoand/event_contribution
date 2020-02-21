@@ -2,14 +2,17 @@ FROM balenalib/%%BALENA_MACHINE_NAME%%-alpine
 
 RUN install_packages mosquitto
 
-COPY mosquitto.conf  /data/mosquitto.conf
+COPY mosquitto.conf /etc/mosquitto/mosquitto.conf
 COPY *.html /www/
 COPY css/ /www/css/
 COPY js/ /www/js/
+
+RUN sed -i 's/window\.location\.port/9001/g' /www/js/functions.js
+RUN mkdir /data
 
 VOLUME /data
 VOLUME /www
 
 EXPOSE 9001
 
-CMD ["/usr/sbin/mosquitto", "-c", "/data/mosquitto.conf"]
+CMD ["/usr/sbin/mosquitto", "-c", "/etc/mosquitto/mosquitto.conf"]

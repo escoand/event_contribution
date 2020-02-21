@@ -11,6 +11,7 @@ services:
     restart: always
     volumes:
       - data:/data:rw
+      - www:/www:rw
 
   wifi-connect:
     build:
@@ -24,6 +25,9 @@ services:
     cap_add:
       - NET_ADMIN
     restart: always
+    volumes:
+      - www:/www:ro
 
 volumes:
   data:
+  www:
