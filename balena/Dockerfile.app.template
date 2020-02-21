@@ -1,6 +1,6 @@
 FROM balenalib/%%BALENA_MACHINE_NAME%%-alpine
 
-RUN apk --no-cache add mosquitto
+RUN install_packages mosquitto
 
 COPY mosquitto.conf  /data/mosquitto.conf
 COPY *.html /www/

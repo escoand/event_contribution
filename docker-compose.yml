@@ -9,6 +9,8 @@ services:
     ports:
       - 9001:9001
     restart: always
+    volumes:
+      - data:/data
 
   wifi-connect:
     build:
@@ -22,6 +24,6 @@ services:
     restart: always
     environment:
       PORTAL_SSID: Event Contribution
-      UI_DIRECTORY: /www
-    volumes_from:
-      - event-contribution
+
+volumes:
+  data:
