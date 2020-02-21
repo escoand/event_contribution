@@ -91,7 +91,7 @@ function onConnect() {
 		document.querySelectorAll('[data-bind-keypress]').forEach(function (elem) {
 			try {
 				elem.addEventListener('keypress', eval(elem.dataset.bindKeypress));
-			} catch {
+			} catch (err) {
 				console.log('unable to bind function', elem);
 			}
 		});
@@ -146,7 +146,7 @@ function addFromTemplate(tmplId, destId, data) {
 		tmp.querySelectorAll('[data-bind-click]').forEach(function (elem) {
 			try {
 				elem.addEventListener('click', eval(elem.dataset.bindClick));
-			} catch {
+			} catch (err) {
 				console.log('unable to bind function', elem);
 			}
 		});
@@ -253,7 +253,7 @@ function likeMessage(evt) {
 			if (parts.length == 2) {
 				liked = JSON.parse(parts.pop().split(";").shift());
 			}
-		} catch { }
+		} catch (err) { }
 		// like if unliked
 		var id = this.dataset.id;
 		if (liked.indexOf(id) == -1) {
