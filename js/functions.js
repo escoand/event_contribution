@@ -1,5 +1,5 @@
 var host_url = 'ws://' + window.location.hostname + ':' + window.location.port + '/mqtt';
-// window.host_url = 'wss://mqtt.eclipse.org/mqtt';
+window.host_url = 'wss://mqtt.eclipse.org/mqtt';
 var host_client = 'client-' + random_id();
 var topic_base = 'event/contribution/';
 var topic_comment = window.topic_base + 'comment';
@@ -238,11 +238,7 @@ function receiveMessage(id, data) {
 		window.data.messages[id] = data;
 		data.id = id;
 		addFromTemplate('template-message', 'message-stream', data);
-		
-		var element =  document.getElementById('message-stream');
-		if (element.hasAttribute('sorted')){
-			sortMessagesByLike('message-' + id);	
-		}
+		sortByLikes(document.querySelectorAll('#message-stream.sorted > [data-likes]'));
 	} else {
 		delete window.data.messages[id];
 		removeById('message-' + id);
@@ -274,19 +270,6 @@ function likeMessage(evt) {
 	}
 }
 
-function sortMessagesByLike(messageid) {
-	var msgElement = document.getElementById(messageid);
-	var previousMsgElement = msgElement.previousElementSibling;
-	if (previousMsgElement !== null){
-		var msgID = msgElement.getAttribute('id');
-		var previousMsgID = previousMsgElement.getAttribute('id');
-		if (data.messages[msgID.substring(8)].likes > data.messages[previousMsgID.substring(8)].likes){
-			msgElement.parentNode.insertBefore(msgElement, previousMsgElement);
-			sortMessagesByLike(messageid);
-		}
-	}
-}
-
 function deleteMessage(evt) {
 	if (confirm('Diese Nachricht wirklich löschen?')) {
 		if (this.dataset.id) {
@@ -299,5 +282,16 @@ function receiveLike(id, client, txt) {
 	if (txt && window.data.messages[id]) {
 		sendMessage(id, window.data.messages[id].text, window.data.messages[id].likes + 1);
 		send(window.topic_like + '/' + id + '/' + client, '', true);
+	}
+}
+
+function sortByLikes(nodes) {
+	if (nodes) {
+		var arr = Array.prototype.slice.call(nodes, 0);
+		arr = arr.sort(function(elem1, elem2) {
+			return elem1.dataset.likes < elem2.dataset.likes;
+		}).forEach(function(elem) {
+			elem.parentNode.appendChild(elem);
+		});
 	}
 }

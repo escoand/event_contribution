@@ -15,7 +15,7 @@
 		<div id="note-top" class="card fluid warning"><h2>{{text}}</h2></div>
 	</script>
 	<script id="template-message" type="text/template">
-		<div id="message-{{id}}">
+		<div id="message-{{id}}" data-likes="{{likes}}">
 			<blockquote>
 				{{text}}
 				<mark class="tag tertiary absolute-top-right">&#128077; {{likes}}</mark>
@@ -28,7 +28,7 @@
 <body>
 	<div>
 		<div id="note-stream"></div>
-		<div id="message-stream" class="row cols-sm-12 cols-md-6 cols-lg-4" sorted></div>
+		<div id="message-stream" class="row cols-sm-12 cols-md-6 cols-lg-4 sorted"></div>
 	</div>
 	<span id="toast" class="toast">Laden</span>
 </body>
