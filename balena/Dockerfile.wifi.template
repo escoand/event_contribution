@@ -2,10 +2,12 @@ FROM balenalib/%%BALENA_MACHINE_NAME%%-debian
 
 RUN install_packages dnsmasq wireless-tools
 
+WORKDIR /app/
+
 RUN curl -s https://api.github.com/repos/balena-io/wifi-connect/releases/latest \
     | grep -ho 'browser_download_url": ".*%%RESIN_ARCH%%\.tar\.gz' \
-    | cut -d '"' -f 3 \
+    | cut -d'"' -f3 \
     | xargs -n1 curl -Ls \
-    | tar -xvz -C /usr/sbin/ ./wifi-connect
+    | tar -xz -C /app/
 
-CMD ["sh", "-c", "/usr/sbin/wifi-connect -u /www/ && sleep infinity"]
+CMD ["sh", "-c", "/app/wifi-connect && sleep infinity"]
