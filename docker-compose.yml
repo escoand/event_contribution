@@ -1,4 +1,4 @@
-version: "2.4"
+version: "2.1"
 
 services:
 
@@ -11,7 +11,7 @@ services:
   wifi-connect:
     build:
       context: balena
-      dockerfile: Dockerfile.wifi-connect
+      dockerfile: Dockerfile.wifi-connect.template
     network_mode: host
     labels:
       io.balena.features.dbus: 1
