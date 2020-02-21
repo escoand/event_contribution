@@ -162,9 +162,9 @@ function addFromTemplate(tmplId, destId, data) {
 		var children = tmp.parentNode.querySelectorAll('[data-orderid]');
 		if (children.length) {
 			Array.from(children)
-				.sort(function(elem1, elem2) {
+				.sort(function (elem1, elem2) {
 					return elem1.dataset.orderid < elem2.dataset.orderid;
-				}).forEach(function(elem) {
+				}).forEach(function (elem) {
 					elem.parentNode.appendChild(elem);
 				});
 		}
