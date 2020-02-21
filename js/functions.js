@@ -159,16 +159,14 @@ function addFromTemplate(tmplId, destId, data) {
 		}
 		dest.appendChild(tmp);
 		// sort
-		if ((attr = tmp.parentNode.dataset.sortby) !== null) {
-			var children = tmp.parentNode.querySelectorAll('[data-' + attr + ']');
-			if (children.length) {
-				Array.from(children)
-					.sort(function(elem1, elem2) {
-						return elem1.dataset[attr] < elem2.dataset[attr];
-					}).forEach(function(elem) {
-						elem.parentNode.appendChild(elem);
-					});
-			}
+		var children = tmp.parentNode.querySelectorAll('[data-orderid]');
+		if (children.length) {
+			Array.from(children)
+				.sort(function(elem1, elem2) {
+					return elem1.dataset.orderid < elem2.dataset.orderid;
+				}).forEach(function(elem) {
+					elem.parentNode.appendChild(elem);
+				});
 		}
 		return tmp;
 	}
