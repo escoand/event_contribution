@@ -8,6 +8,4 @@ RUN curl -s https://api.github.com/repos/balena-io/wifi-connect/releases/latest 
     | xargs -n1 curl -Ls \
     | tar -xvz -C /usr/sbin/ ./wifi-connect
 
-COPY redirect.html /www/index.html
-
 CMD ["sh", "-c", "/usr/sbin/wifi-connect -u /www/ && sleep infinity"]
