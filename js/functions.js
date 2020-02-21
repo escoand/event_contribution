@@ -69,6 +69,7 @@ function showToast(txt) {
 function onFailure(err) {
 	console.log(err);
 	showToast('FEHLER: ' + err.errorMessage);
+	connect();
 }
 
 function onConnectionLost(err) {
