@@ -10,6 +10,6 @@ COPY js/ /www/js/
 VOLUME /data
 VOLUME /www
 
-EXPOSE 1883 9001
+EXPOSE 9001
 
 CMD ["/usr/sbin/mosquitto", "-c", "/data/mosquitto.conf"]
