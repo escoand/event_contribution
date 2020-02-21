@@ -245,7 +245,8 @@ function receiveMessage(id, data) {
 }
 
 function likeMessage(evt) {
-	if (this.dataset.id) {
+	var id = this.dataset.id;
+	if (id) {
 		// cookie
 		var liked = [];
 		try {
@@ -256,12 +257,11 @@ function likeMessage(evt) {
 			}
 		} catch (err) { }
 		// like if unliked
-		var id = this.dataset.id;
 		if (liked.indexOf(id) == -1) {
 			liked.push(id);
 			document.cookie = 'liked=' + JSON.stringify(liked);
 			document.cookie = 'max-age=' + (6 * 60 * 60);
-			if (send(window.topic_like + '/' + id + '/' + host_client, 'like', true)) {
+			if (send(window.topic_like + '/' + id + '/' + window.host_client, 'like', true)) {
 				var data = { id: id };
 				addFromTemplate('template-likes-loading', 'likes-' + id, data);
 			}
