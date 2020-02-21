@@ -238,6 +238,11 @@ function receiveMessage(id, data) {
 		window.data.messages[id] = data;
 		data.id = id;
 		addFromTemplate('template-message', 'message-stream', data);
+		
+		var element =  document.getElementById('message-stream');
+		if (element.hasAttribute('sorted')){
+			sortMessagesByLike('message-' + id);	
+		}
 	} else {
 		delete window.data.messages[id];
 		removeById('message-' + id);
@@ -265,6 +270,19 @@ function likeMessage(evt) {
 				var data = { id: id };
 				addFromTemplate('template-likes-loading', 'likes-' + id, data);
 			}
+		}
+	}
+}
+
+function sortMessagesByLike(messageid) {
+	var msgElement = document.getElementById(messageid);
+	var previousMsgElement = msgElement.previousElementSibling;
+	if (previousMsgElement !== null){
+		var msgID = msgElement.getAttribute('id');
+		var previousMsgID = previousMsgElement.getAttribute('id');
+		if (data.messages[msgID.substring(8)].likes > data.messages[previousMsgID.substring(8)].likes){
+			msgElement.parentNode.insertBefore(msgElement, previousMsgElement);
+			sortMessagesByLike(messageid);
 		}
 	}
 }
