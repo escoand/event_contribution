@@ -155,10 +155,20 @@ function addFromTemplate(tmplId, destId, data) {
 		if (tmp.id) {
 			if ((old = document.getElementById(tmp.id)) !== null) {
 				old.parentNode.replaceChild(tmp, old);
-				return tmp;
 			}
 		}
-		return dest.appendChild(tmp);
+		dest.appendChild(tmp);
+		// sort
+		var children = tmp.parentNode.querySelectorAll('[data-orderid]');
+		if (children.length) {
+			Array.from(children)
+				.sort(function(elem1, elem2) {
+					return elem1.dataset.orderid < elem2.dataset.orderid;
+				}).forEach(function(elem) {
+					elem.parentNode.appendChild(elem);
+				});
+		}
+		return tmp;
 	}
 }
 
