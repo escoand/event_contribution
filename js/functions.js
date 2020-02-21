@@ -155,10 +155,22 @@ function addFromTemplate(tmplId, destId, data) {
 		if (tmp.id) {
 			if ((old = document.getElementById(tmp.id)) !== null) {
 				old.parentNode.replaceChild(tmp, old);
-				return tmp;
 			}
 		}
-		return dest.appendChild(tmp);
+		dest.appendChild(tmp);
+		// sort
+		if ((attr = tmp.parentNode.dataset.sortby) !== null) {
+			var children = tmp.parentNode.querySelectorAll('[data-' + attr + ']');
+			if (children.length) {
+				Array.from(children)
+					.sort(function(elem1, elem2) {
+						return elem1.dataset[attr] < elem2.dataset[attr];
+					}).forEach(function(elem) {
+						elem.parentNode.appendChild(elem);
+					});
+			}
+		}
+		return tmp;
 	}
 }
 
@@ -238,7 +250,6 @@ function receiveMessage(id, data) {
 		window.data.messages[id] = data;
 		data.id = id;
 		addFromTemplate('template-message', 'message-stream', data);
-		sortByLikes(document.querySelectorAll('#message-stream.sorted > [data-likes]'));
 	} else {
 		delete window.data.messages[id];
 		removeById('message-' + id);
@@ -282,16 +293,5 @@ function receiveLike(id, client, txt) {
 	if (txt && window.data.messages[id]) {
 		sendMessage(id, window.data.messages[id].text, window.data.messages[id].likes + 1);
 		send(window.topic_like + '/' + id + '/' + client, '', true);
-	}
-}
-
-function sortByLikes(nodes) {
-	console.log(nodes);
-	if (nodes.length) {
-		 Array.from(nodes).sort(function(elem1, elem2) {
-			return elem1.dataset.likes < elem2.dataset.likes;
-		}).forEach(function(elem) {
-			elem.parentNode.appendChild(elem);
-		});
 	}
 }
