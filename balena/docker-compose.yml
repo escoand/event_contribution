@@ -1,0 +1,25 @@
+version: "2.4"
+
+services:
+
+  event-contribution:
+    build: ..
+    ports:
+      - 9001:9001
+    restart: always
+
+  wifi-connect:
+    build:
+      context: .
+      dockerfile: Dockerfile.wifi-connect
+    network_mode: host
+    labels:
+      io.balena.features.dbus: 1
+    cap_add:
+      - NET_ADMIN
+    restart: always
+    environment:
+      PORTAL_SSID: Event Contribution
+      UI_DIRECTORY: /www
+    volumes_from:
+      - event-contribution
