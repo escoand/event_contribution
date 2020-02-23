@@ -154,12 +154,11 @@ function addFromTemplate(tmplId, destId, data) {
 			}
 		});
 		// replace old
-		if (tmp.id) {
-			if ((old = document.getElementById(tmp.id)) !== null) {
-				old.parentNode.replaceChild(tmp, old);
-			}
+		if (tmp.id && (old = document.getElementById(tmp.id)) !== null) {
+			old.parentNode.replaceChild(tmp, old);
+		} else {
+			dest.appendChild(tmp);
 		}
-		dest.appendChild(tmp);
 		// sort
 		var children = tmp.parentNode.querySelectorAll('[data-orderid]');
 		if (children.length) {
