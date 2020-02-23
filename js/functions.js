@@ -1,5 +1,7 @@
 var host_url = 'ws://' + window.location.hostname + ':' + window.location.port + '/mqtt';
-// window.host_url = 'wss://mqtt.eclipse.org/mqtt';
+if (window.location.protocol == 'file:') {
+	window.host_url = 'wss://mqtt.eclipse.org/mqtt';
+}
 var host_client = 'client-' + random_id();
 var topic_base = 'event/contribution/';
 var topic_comment = window.topic_base + 'comment';
