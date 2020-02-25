@@ -7,8 +7,6 @@ COPY *.html /www/
 COPY css/ /www/css/
 COPY js/ /www/js/
 
-RUN sed -i 's/window\.location\.port/9001/g' /www/js/functions.js
-
 VOLUME /data
 
 EXPOSE 9001

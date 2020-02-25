@@ -2,43 +2,53 @@
 <html>
 
 <head>
-	<title>Kommentare</title>
+	<title>Nachrichten</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<link href="css/mini-dark.min.css" rel="stylesheet" />
-	<link href="css/style.css" rel="stylesheet" />
+	<link href="css/bootstrap.cyborg.min.css" rel="stylesheet" />
 	<script src="js/paho-mqtt-min.js" type="text/javascript"></script>
 	<script src="js/functions.js" type="text/javascript"></script>
 
 	<!-- templates -->
 	<script id="template-note" type="text/template">
-		<div id="note-top" class="card fluid warning"><h2>{{text}}</h2></div>
-	</script>
-	<script id="template-message" type="text/template">
-		<div id="message-{{id}}">
-			<blockquote>
-				{{text}}
-				<div class="absolute-top-right">
-					<button id="likes-{{id}}" data-id="{{id}}" data-bind-click="likeMessage" class="tag tertiary">&#128077; {{likes}}</button>
-				</div>
-			</blockquote>
+		<div id="note-top" class="card bg-primary text-white mb-3">
+			<div class="card-body text-center p-2"><h5 class="m-0">{{text}}</h5></div>
 		</div>
 	</script>
+	<script id="template-message" type="text/template">
+			<div id="message-{{id}}" class="card mb-3">
+				<div class="card-body">
+					<div class="float-right ml-2">
+						<button id="likes-{{id}}" data-id="{{id}}" data-bind-click="likeMessage" class="btn btn-sm btn-success">&#128077; {{likes}}</button>
+					</div>
+					<div class="card-text">{{text}}</div>
+				</div>
+			</div>
+	</script>
 	<script id="template-likes-loading" type="text/template">
-		<span id="likes-{{id}}" class="tag spinner tertiary"></span>
+		<span id="likes-{{id}}" class="spinner-border text-success" style="height:28px;width:28px;"></span>
+	</script>
+	<script id="template-toast" type="text/template">
+		<div id="toast" class="toast text-center bg-secondary text-white rounded-pill fixed-bottom mx-auto my-5" style="opacity:1">
+			<div class="toast-body">{{text}}</div>
+		</div>
 	</script>
 
 </head>
 
-<body>
-	<div class="has-footer">
-		<div id="note-stream"></div>
-		<div id="message-stream" class="row cols-sm-12 cols-md-6 cols-lg-4"></div>
+<body id="toast-host">
+	<div class="container-fluid pt-3 mb-5">
+		<div class="row has-footer">
+			<div id="note-stream" class="col-12"></div>
+			<div id="message-stream" class="col-12"></div>
+		</div>
 	</div>
-	<footer class="input-group fluid">
-		<input data-bind-keypress="sendComment" type="text" placeholder="&#128172; Meine Nachricht" />
+	<footer class="footer fixed-bottom bg-light border-top border-secondary pt-3">
+		<div class="container-fluid form-group">
+			<input data-bind-keypress="sendComment" type="text" placeholder="&#128172; Meine Nachricht"
+				class="form-control" />
+		</div>
 	</footer>
-	<span id="toast" class="toast">Laden</span>
 </body>
 
 </html>
