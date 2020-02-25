@@ -11,12 +11,11 @@ services:
     restart: always
     volumes:
       - data:/data:rw
-      - www:/www:ro
 
   wifi-connect:
     build:
-      context: balena
-      dockerfile: Dockerfile.wifi.template
+      context: .
+      dockerfile: balena/Dockerfile.wifi.template
     network_mode: host
     cap_add:
       - NET_ADMIN
@@ -24,11 +23,7 @@ services:
       io.balena.features.dbus: 1
     environment:
       DBUS_SYSTEM_BUS_ADDRESS: unix:path=/host/run/dbus/system_bus_socket
-      UI_DIRECTORY: /www
     restart: always
-    volumes:
-      - www:/www:ro
 
 volumes:
   data:
-  www:

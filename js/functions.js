@@ -56,15 +56,11 @@ function send(topic, payload, retain) {
 }
 
 function showToast(txt) {
-	var toast = document.getElementById('toast');
-	while (toast.firstChild) {
-		toast.removeChild(toast.lastChild);
-	}
+	var elem = document.getElementById('toast');
 	if (txt) {
-		toast.appendChild(document.createTextNode(txt));
-		toast.style.visibility = 'visible';
-	} else {
-		toast.style.visibility = 'hidden';
+		addFromTemplate('template-toast', 'toast-host', { text: txt })
+	} else if (elem) {
+		elem.remove();
 	}
 }
 
