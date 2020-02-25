@@ -7,10 +7,11 @@ COPY css/ /www/css/
 COPY js/ /www/js/
 RUN sed -i 's/window\.location\.port/9001/g' /www/js/functions.js
 
+COPY balena/start.sh /usr/sbin/
 RUN curl -s https://api.github.com/repos/balena-io/wifi-connect/releases/latest \
     | grep -ho 'browser_download_url": ".*%%RESIN_ARCH%%\.tar\.gz' \
     | cut -d'"' -f3 \
     | xargs -n1 curl -Ls ./wifi-connect \
     | tar -xz -C /usr/sbin/
 
-CMD ["sh", "-c", "/usr/sbin/wifi-connect -u /www && sleep infinity"]
+CMD ["/usr/sbin/start.sh"]
