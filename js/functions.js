@@ -23,6 +23,10 @@ function random_id() {
 	).toString(36);
 }
 
+function escapeHTML(txt) {
+	return document.createElement('div').appendChild(document.createTextNode(txt)).parentNode.innerHTML;
+}
+
 function connect() {
 	if (window.connect_count > 5) {
 		return;
@@ -194,7 +198,7 @@ function sendComment(evt) {
 function receiveComment(id, txt) {
 	if (txt) {
 		window.data.comments[id] = { text: txt };
-		var data = { id: id, text: txt, date: new Date().toLocaleString() };
+		var data = { id: id, text: escapeHTML(txt), date: new Date().toLocaleString() };
 		addFromTemplate('template-comment', 'comment-stream', data);
 	} else {
 		delete window.data.comments[id];
@@ -227,7 +231,7 @@ function sendNote(evt) {
 
 function receiveNote(txt) {
 	if (txt) {
-		var data = { text: txt };
+		var data = { text: escapeHTML(txt) };
 		addFromTemplate('template-note', 'note-stream', data);
 	} else {
 		removeById('note-top');
@@ -239,11 +243,14 @@ function sendMessage(id, txt, likes) {
 	return send(window.topic_message + '/' + id, data, true);
 }
 
-function receiveMessage(id, data) {
-	if (data) {
-		var data = JSON.parse(data);
-		window.data.messages[id] = data;
-		data.id = id;
+function receiveMessage(id, input) {
+	if (input) {
+		var input = JSON.parse(input);
+		window.data.messages[id] = {
+			text: input.text,
+			likes: input.likes,
+		};
+		var data = { id: id, text: escapeHTML(input.text), likes: escapeHTML(input.likes) };
 		addFromTemplate('template-message', 'message-stream', data);
 	} else {
 		delete window.data.messages[id];
