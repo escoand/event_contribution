@@ -62,8 +62,14 @@
 						<div class="col text-right text-muted pr-0">Clients: <span id="stats-clients">?</span></div>
 					</div>
 					<div class="form-group row">
-						<input data-bind-keypress="sendComment" type="text" placeholder="&#128172; Neue Nachricht"
-							class="form-control" />
+						<div class="input-group ">
+							<input data-bind-keypress="sendComment" type="text" placeholder="&#128172; Neue Nachricht"
+								class="form-control" />
+							<div class="input-group-append">
+								<button data-bind-click="sendComment"
+									class="btn bg-secondary btn-outline-secondary">&#128232;</button>
+							</div>
+						</div>
 					</div>
 					<div id="comment-stream" class="row"></div>
 				</div>
@@ -77,8 +83,14 @@
 						</h4>
 					</div>
 					<div class="form-group row">
-						<input data-bind-keypress="sendNote" type="text" placeholder="&#128172; Neue Info"
-							class="form-control" />
+						<div class="input-group">
+							<input data-bind-keypress="sendNote" type="text" placeholder="&#128172; Neue Info"
+								class="form-control" />
+							<div class="input-group-append">
+								<button data-bind-click="sendNote"
+									class="btn bg-secondary btn-outline-secondary">&#128232;</button>
+							</div>
+						</div>
 					</div>
 					<div id="note-stream" class="row"></div>
 					<div id="message-stream" class="row"></div>

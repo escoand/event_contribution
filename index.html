@@ -38,7 +38,7 @@
 </head>
 
 <body id="toast-host">
-	<div class="container-fluid pt-3 mb-5">
+	<div class="container-fluid py-3 mb-5">
 		<div class="row has-footer">
 			<div id="note-stream" class="col-12"></div>
 			<div id="message-stream" class="col-12"></div>
@@ -46,8 +46,14 @@
 	</div>
 	<footer class="footer fixed-bottom bg-light border-top border-secondary pt-3">
 		<div class="container-fluid form-group">
-			<input data-bind-keypress="sendComment" type="text" placeholder="&#128172; Meine Nachricht"
-				class="form-control" />
+			<div class="input-group">
+				<input data-bind-keypress="sendComment" type="text" placeholder="&#128172; Meine Nachricht"
+					class="form-control" />
+				<div class="input-group-append">
+					<button data-bind-click="sendComment"
+						class="btn bg-secondary btn-outline-secondary">&#128232;</button>
+				</div>
+			</div>
 		</div>
 	</footer>
 </body>
