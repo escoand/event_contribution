@@ -98,6 +98,14 @@ function onConnect() {
 				console.log('unable to bind function', elem);
 			}
 		});
+		// bind click
+		document.querySelectorAll('[data-bind-click]').forEach(function (elem) {
+			try {
+				elem.addEventListener('click', eval(elem.dataset.bindClick));
+			} catch (err) {
+				console.log('unable to bind function', elem);
+			}
+		});
 	} catch (err) {
 		console.log(err);
 		showToast('FEHLER: Versuche die Seite neu zu laden.');
@@ -173,6 +181,12 @@ function addFromTemplate(tmplId, destId, data) {
 	}
 }
 
+function findClosestInput(elem) {
+	if ((tmp = elem.closest('.input-group')) !== null) {
+		return tmp.querySelector('input[type="text"]');
+	}
+}
+
 function removeById(id) {
 	if ((elem = document.getElementById(id)) !== null) {
 		elem.remove();
@@ -188,9 +202,11 @@ function receiveStats(topic, txt) {
 }
 
 function sendComment(evt) {
-	if (evt.key == 'Enter' && this.value) {
-		if (send(window.topic_comment + '/' + random_id(), this.value, true)) {
-			this.value = '';
+	var elem = this;
+	if (evt.type == 'keypress' && evt.key == 'Enter' && elem.value ||
+		evt.type == 'click' && (elem = findClosestInput(this)) !== null && elem.value) {
+		if (send(window.topic_comment + '/' + random_id(), elem.value, true)) {
+			elem.value = '';
 		}
 	}
 }
@@ -222,9 +238,11 @@ function deleteComment(evt) {
 }
 
 function sendNote(evt) {
-	if (evt.key == 'Enter') {
-		if (send(window.topic_note, this.value, true)) {
-			this.value = '';
+	var elem = this;
+	if (evt.type == 'keypress' && evt.key == 'Enter' ||
+		evt.type == 'click' && (elem = findClosestInput(this)) !== null) {
+		if (send(window.topic_note, elem.value, true)) {
+			elem.value = '';
 		}
 	}
 }
