@@ -5,11 +5,8 @@ COPY *.html /www/
 COPY css/ /www/css/
 COPY js/ /www/js/
 
-RUN mkdir /data
-
 VOLUME /data
-VOLUME /www
 
-EXPOSE 1883 9001
+EXPOSE 9001
 
-CMD ["/usr/sbin/mosquitto", "-c", "/mosquitto/config/mosquitto.conf"]
+CMD ["sh", "-c", "chown mosquitto /data && /usr/sbin/mosquitto -c /mosquitto/mosquitto/mosquitto.conf"]
