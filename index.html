@@ -12,7 +12,7 @@
 
 	<!-- templates -->
 	<script id="template-note" type="text/template">
-		<div id="note-top" class="card bg-primary colors-event text-white mb-3">
+		<div id="note-top" class="card bg-primary text-white mb-3">
 			<div class="card-body text-center p-2"><h6 class="m-0">{{text}}</h6></div>
 		</div>
 	</script>
@@ -20,7 +20,7 @@
 			<div id="message-{{id}}" class="card mb-3">
 				<div class="card-body">
 					<div class="float-right ml-2">
-						<button id="likes-{{id}}" data-id="{{id}}" data-bind-click="likeMessage" class="btn btn-sm btn-success colors-event">&#128077; {{likes}}</button>
+						<button id="likes-{{id}}" data-id="{{id}}" data-bind-click="likeMessage" class="btn btn-sm btn-success">&#128077; {{likes}}</button>
 					</div>
 					<div class="card-text">{{text}}</div>
 				</div>
