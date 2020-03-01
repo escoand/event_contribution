@@ -6,27 +6,28 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<link href="css/bootstrap.cyborg.min.css" rel="stylesheet" />
+	<link href="css/styles.css" rel="stylesheet" />
 	<script src="js/paho-mqtt-min.js" type="text/javascript"></script>
 	<script src="js/functions.js" type="text/javascript"></script>
 
 	<!-- templates -->
 	<script id="template-note" type="text/template">
-		<div id="note-top" class="card bg-primary text-white mb-3">
-			<div class="card-body text-center p-2"><h5 class="m-0">{{text}}</h5></div>
+		<div id="note-top" class="card bg-primary colors-event text-white mb-3">
+			<div class="card-body text-center p-2"><h6 class="m-0">{{text}}</h6></div>
 		</div>
 	</script>
 	<script id="template-message" type="text/template">
 			<div id="message-{{id}}" class="card mb-3">
 				<div class="card-body">
 					<div class="float-right ml-2">
-						<button id="likes-{{id}}" data-id="{{id}}" data-bind-click="likeMessage" class="btn btn-sm btn-success">&#128077; {{likes}}</button>
+						<button id="likes-{{id}}" data-id="{{id}}" data-bind-click="likeMessage" class="btn btn-sm btn-success colors-event">&#128077; {{likes}}</button>
 					</div>
 					<div class="card-text">{{text}}</div>
 				</div>
 			</div>
 	</script>
 	<script id="template-likes-loading" type="text/template">
-		<span id="likes-{{id}}" class="spinner-border text-success" style="height:28px;width:28px;"></span>
+		<span id="likes-{{id}}" class="spinner-border text-success" style="height:26px;width:26px;"></span>
 	</script>
 	<script id="template-toast" type="text/template">
 		<div id="toast" class="toast text-center bg-secondary text-white rounded-pill fixed-bottom mx-auto my-5" style="opacity:1">
