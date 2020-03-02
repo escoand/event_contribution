@@ -172,7 +172,7 @@ function addFromTemplate(tmplId, destId, data) {
 		if (children.length) {
 			Array.from(children)
 				.sort(function (elem1, elem2) {
-					return elem1.dataset.orderid < elem2.dataset.orderid;
+					return elem2.dataset.orderid - elem1.dataset.orderid;
 				}).forEach(function (elem) {
 					elem.parentNode.appendChild(elem);
 				});
