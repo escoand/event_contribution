@@ -10,7 +10,7 @@ services:
       - 9001:9001
     restart: always
     tmpfs:
-      - /www
+      - /tmp/www
     volumes:
       - data:/data
 
@@ -26,7 +26,7 @@ services:
       io.balena.features.supervisor-api: 1
     restart: always
     tmpfs:
-      - /www
+      - /tmp/www
 
 volumes:
   data:
