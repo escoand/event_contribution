@@ -9,8 +9,6 @@ services:
     ports:
       - 9001:9001
     restart: always
-    tmpfs:
-      - /tmp/www
     volumes:
       - data:/data
 
