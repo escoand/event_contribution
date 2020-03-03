@@ -9,8 +9,10 @@ services:
     ports:
       - 9001:9001
     restart: always
+    tmpfs:
+      - /www
     volumes:
-      - data:/data:rw
+      - data:/data
 
   wifi-connect:
     build:
@@ -23,6 +25,8 @@ services:
       io.balena.features.dbus: 1
       io.balena.features.supervisor-api: 1
     restart: always
+    tmpfs:
+      - /www
 
 volumes:
   data:
