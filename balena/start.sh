@@ -10,5 +10,11 @@ until
         sleep 30
 done
 
-/usr/sbin/wifi-connect -u /www &&
+if [ -d /tmp/www ]; then
+    cp -r /www/* /tmp/www/
+    /usr/sbin/wifi-connect -u /tmp/www
+else
+    /usr/sbin/wifi-connect -u /www
+fi
+
 sleep infinity
