@@ -8,6 +8,7 @@ var topic_comment = window.topic_base + 'comment';
 var topic_note = window.topic_base + 'note';
 var topic_message = window.topic_base + 'message';
 var topic_like = window.topic_base + 'like';
+var topic_highlight = window.topic_base + 'highlight';
 var topic_stats = '$SYS/broker/clients';
 var mqtt;
 var connect_count = 1;
@@ -85,6 +86,7 @@ function onConnect() {
 	try {
 		window.mqtt.subscribe(window.topic_note, { qos: 1 });
 		window.mqtt.subscribe(window.topic_message + '/+', { qos: 1 });
+		window.mqtt.subscribe(window.topic_highlight, { qos: 1 });
 		if (document.querySelector('body[data-is-admin]')) {
 			window.mqtt.subscribe(window.topic_comment + '/+', { qos: 1 });
 			window.mqtt.subscribe(window.topic_like + '/+/+', { qos: 1 });
@@ -136,6 +138,10 @@ function onReceive(msg) {
 		var subtopic = msg.destinationName.substr(window.topic_like.length + 1);
 		var paths = subtopic.split('/');
 		receiveLike(paths[0], paths[1], msg.payloadString);
+	}
+	// highlight
+	else if (msg.destinationName == window.topic_highlight) {
+		receiveHighlight(msg.payloadString);
 	}
 	// unknown
 	else {
@@ -276,6 +282,14 @@ function receiveMessage(id, input) {
 	}
 }
 
+function highlightMessage(evt) {
+	var id = this.dataset.id;
+	if (id && window.data.messages[id]) {
+		var data = JSON.stringify(window.data.messages[id]);
+		return send(window.topic_highlight, data);
+	}
+}
+
 function likeMessage(evt) {
 	var id = this.dataset.id;
 	if (id) {
@@ -313,5 +327,12 @@ function receiveLike(id, client, txt) {
 	if (txt && window.data.messages[id]) {
 		sendMessage(id, window.data.messages[id].text, window.data.messages[id].likes + 1);
 		send(window.topic_like + '/' + id + '/' + client, '', true);
+	}
+}
+
+function receiveHighlight(txt) {
+	var data = JSON.parse(txt);
+	if (data) {
+		addFromTemplate('template-highlight', 'highlight-stream', data);
 	}
 }
