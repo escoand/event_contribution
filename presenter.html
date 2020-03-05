@@ -11,6 +11,16 @@
 	<script src="js/functions.js" type="text/javascript"></script>
 
 	<!-- templates -->
+	<script id="template-highlight" type="text/template">
+		<div id="message-highlight" class="card bg-primary text-white mb-3 w-100">
+			<div class="card-body p-2">
+				<div class="float-right ml-2">
+					<span class="badge badge-success p-2">&#128077; {{likes}}</span>
+				</div>
+				<div class="card-text">{{text}}</div>
+			</div>
+		</div>
+	</script>
 	<script id="template-message" type="text/template">
 		<div id="message-{{id}}" data-orderid="{{likes}}" class="card text-white mb-3 w-100">
 			<div class="card-body p-2">
@@ -30,8 +40,13 @@
 </head>
 
 <body id="toast-host">
-	<div class="container-fluid pt-3">
-		<div id="message-stream"></div>
+	<div class="container-fluid">
+		<table class="w-100 vh-100">
+			<tr>
+				<td id="highlight-stream" class="align-middle"></td>
+			</tr>
+		</table>
+		<div id="message-stream" class="mt-3"></div>
 	</div>
 </body>
 
