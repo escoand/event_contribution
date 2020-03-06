@@ -11,7 +11,6 @@ var topic_like = window.topic_base + 'like';
 var topic_highlight = window.topic_base + 'highlight';
 var topic_stats = '$SYS/broker/clients';
 var mqtt;
-var connect_count = 1;
 var data = { comments: {}, messages: {} };
 
 document.addEventListener('DOMContentLoaded', connect);
@@ -29,19 +28,15 @@ function escapeHTML(txt) {
 }
 
 function connect() {
-	if (window.connect_count > 5) {
-		return;
-	}
 	window.mqtt = new Paho.Client(window.host_url, window.host_client);
 	window.mqtt.onMessageArrived = onReceive;
-	window.mqtt.onConnectionLost = onConnectionLost;
-	showToast('Verbinde zum Server' + (window.connect_count > 1 ? ' (Versuch ' + window.connect_count + ')' : ''));
+	window.mqtt.onConnectionLost = onFailure;
+	showToast('Verbinde zum Server');
 	try {
 		window.mqtt.connect({
 			onSuccess: onConnect,
 			onFailure: onFailure
 		});
-		window.connect_count++;
 	} catch (err) {
 		console.log(err);
 		showToast('FEHLER: Versuche die Seite neu zu laden.');
@@ -71,14 +66,8 @@ function showToast(txt) {
 
 function onFailure(err) {
 	console.log(err);
-	showToast('FEHLER: ' + err.errorMessage);
-	connect();
-}
-
-function onConnectionLost(err) {
-	console.log(err);
-	showToast('FEHLER: ' + err.errorMessage);
-	connect();
+	showToast('FEHLER: Neue Verbindung in 2 Sekunden.');
+	window.setTimeout(connect, 2000);
 }
 
 function onConnect() {
