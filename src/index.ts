@@ -1,14 +1,8 @@
 import "./bootstrap.cyborg.min.css";
 import "./styles.css";
 
-import { Client, Message } from "paho-mqtt";
+import { Client } from "paho-mqtt";
 
-const host_url =
-  window.location.protocol == "file:"
-    ? "wss://mqtt.eclipse.org/mqtt"
-    : window.location.protocol == "https"
-    ? "wss://" + window.location.hostname + ":" + window.location.port + "/mqtt"
-    : "ws://" + window.location.hostname + ":" + window.location.port + "/mqtt";
 const host_client = "client-" + random_id();
 const topic_base = "event/contribution/";
 const topic_comment = topic_base + "comment";
@@ -18,7 +12,7 @@ const topic_like = topic_base + "like";
 const topic_highlight = topic_base + "highlight";
 const topic_stats = "$SYS/broker/clients";
 // @ts-ignore
-const mqtt = new Client(host_url, host_client) as any;
+const mqtt = new Client(mqttUrl(), host_client) as any;
 const storage = { comments: {}, messages: {} };
 const functions = {
   deleteComment: deleteComment,
@@ -31,6 +25,16 @@ const functions = {
 };
 
 document.addEventListener("DOMContentLoaded", connect);
+
+function mqttUrl(): string {
+  if (window.location.protocol == "file:") {
+    return "wss://mqtt.eclipse.org/mqtt";
+  } else if (window.location.protocol == "https:") {
+    return `wss://${window.location.hostname}:${window.location.port}/mqtt`;
+  } else {
+    return `ws://${window.location.hostname}:${window.location.port}/mqtt`;
+  }
+}
 
 function random_id(): string {
   return (
