@@ -1,9 +1,7 @@
 FROM eclipse-mosquitto
 
 COPY mosquitto.conf  /mosquitto/config/mosquitto.conf
-COPY *.html /www/
-COPY css/ /www/css/
-COPY js/ /www/js/
+COPY dist/ /www/
 
 VOLUME /data
 

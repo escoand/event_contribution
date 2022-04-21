@@ -3,9 +3,7 @@ FROM balenalib/%%BALENA_MACHINE_NAME%%-alpine
 RUN install_packages mosquitto
 
 COPY mosquitto.conf /etc/mosquitto/mosquitto.conf
-COPY *.html /www/
-COPY css/ /www/css/
-COPY js/ /www/js/
+COPY dist/ /www/
 
 VOLUME /data
 
