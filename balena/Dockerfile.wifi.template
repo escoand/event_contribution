@@ -2,10 +2,7 @@ FROM balenalib/%%BALENA_MACHINE_NAME%%-debian
 
 RUN install_packages dnsmasq wireless-tools
 
-COPY index.html /www/
-COPY css/ /www/css/
-COPY js/ /www/js/
-RUN sed -i 's/window\.location\.port/9001/g' /www/js/functions.js
+COPY dist/ /www/
 
 COPY balena/start.sh /usr/sbin/
 RUN curl -s https://api.github.com/repos/balena-io/wifi-connect/releases/latest \
