@@ -6,6 +6,8 @@ import { Client, Message } from "paho-mqtt";
 const host_url =
   window.location.protocol == "file:"
     ? "wss://mqtt.eclipse.org/mqtt"
+    : window.location.protocol == "https"
+    ? "wss://" + window.location.hostname + ":" + window.location.port + "/mqtt"
     : "ws://" + window.location.hostname + ":" + window.location.port + "/mqtt";
 const host_client = "client-" + random_id();
 const topic_base = "event/contribution/";
