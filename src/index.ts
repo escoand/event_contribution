@@ -31,7 +31,7 @@ function mqttUrl(): string {
     window.location.protocol == "file:" ||
     window.location.hostname.endsWith(".vercel.app")
   ) {
-    return "wss://mqtt.eclipse.org/mqtt";
+    return "wss://mqtt.eclipseprojects.io/mqtt";
   } else if (window.location.protocol == "https:") {
     return `wss://${window.location.hostname}:${window.location.port}/mqtt`;
   } else {
