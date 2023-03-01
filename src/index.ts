@@ -228,7 +228,7 @@ function addFromTemplate(
 
 function findClosestInput(elem: HTMLElement): HTMLElement {
   const tmp = elem.closest(".input-group");
-  if (tmp !== null) return tmp.querySelector('input[type="text"]');
+  if (tmp !== null) return tmp.querySelector('input');
 }
 
 function removeById(id: string): void {
@@ -275,11 +275,11 @@ function receiveComment(id: string, txt: string): void {
 }
 
 function takeComment(evt: Event): void {
-  if (confirm("Diesen Kommentar wirklich übernehmen?")) {
+  //if (confirm("Diesen Kommentar wirklich übernehmen?")) {
     const id = this.dataset.id;
     send(topic_comment + "/" + id, "", true);
     sendMessage(id, storage.comments[id].text);
-  }
+  //}
 }
 
 function deleteComment(evt: Event): void {
