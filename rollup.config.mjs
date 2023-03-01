@@ -3,21 +3,28 @@ import commonjs from "@rollup/plugin-commonjs";
 import htmlTemplate from "rollup-plugin-generate-html-template";
 import resolve from "@rollup/plugin-node-resolve";
 import postcss from "rollup-plugin-postcss";
-import typescript from "@rollup/plugin-typescript";
-import { terser } from "rollup-plugin-terser";
+import terser from "@rollup/plugin-terser";
 import { minify } from "html-minifier";
 
 const srcDir = "src";
 const distDir = "dist";
+const extensions = [".js", ".jsx", ".ts", ".tsx"];
 
 export default {
   input: srcDir + "/index.ts",
   output: { dir: distDir, format: "es", sourcemap: true },
   plugins: [
     commonjs({ include: ["node_modules/**"] }), // convert CommonJS modules to ES6
-    resolve(), // resolve third party modules
-    typescript(), // compile typescript
-    babel({ babelHelpers: "bundled", presets: [["@babel/preset-env"]] }), // transpile to ES5
+    resolve({ extensions }), // resolve third party modules
+    babel({
+      babelHelpers: "bundled",
+      extensions,
+      presets: [
+        "@babel/preset-typescript",
+        ["@babel/preset-env", { corejs: "3.29", useBuiltIns: "entry" }],
+      ],
+      targets: "defaults",
+    }), // transpile to ES5
     terser(), // minify generated ES bundle
     postcss({ extract: true, minimize: true }), // bundle css files
     htmlTemplate({ template: srcDir + "/index.html" }),
@@ -25,8 +32,8 @@ export default {
     htmlTemplate({ template: srcDir + "/presenter.html" }),
     // minify html files
     {
-      closeBundle: () => {
-        const fs = require("fs");
+      closeBundle: async () => {
+        const fs = await import("fs");
         fs.readdirSync(distDir)
           .filter((f) => f.endsWith(".html"))
           .map((f) => distDir + "/" + f)
