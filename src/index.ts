@@ -15,19 +15,18 @@ class EventContribution {
   // @ts-ignore: 2 parameter call handled internally
   private mqtt = new Client(EventContribution.mqttUrl(), this.host_client) as any;
   private storage = { comments: {}, messages: {} };
-  private functions: { [index: string]: (evt: UIEvent) => any };
+  private functions: { [index: string]: (evt: UIEvent) => any } = {
+    deleteComment: this.deleteComment.bind(this),
+    deleteMessage: this.deleteMessage.bind(this),
+    highlightMessage: this.highlightMessage.bind(this),
+    likeMessage: this.likeMessage.bind(this),
+    sendComment: this.sendComment.bind(this),
+    sendNote: this.sendNote.bind(this),
+    takeComment: this.takeComment.bind(this),
+  };
 
   constructor() {
     this.connect();
-    this.functions = {
-      deleteComment: this.deleteComment,
-      deleteMessage: this.deleteMessage,
-      highlightMessage: this.highlightMessage,
-      likeMessage: this.likeMessage,
-      sendComment: this.sendComment,
-      sendNote: this.sendNote,
-      takeComment: this.takeComment,
-    }
   }
 
   static random_id(): string {
@@ -59,20 +58,20 @@ class EventContribution {
     }
   }
 
-  escapeHTML = (txt: string): string => {
+  escapeHTML(txt: string): string {
     const tmp = document.createElement("div");
     tmp.append(txt);
     return tmp.innerHTML;
   }
 
-  connect = (): void => {
-    this.mqtt.onMessageArrived = this.onReceive;
-    this.mqtt.onConnectionLost = this.onFailure;
+  connect(): void {
+    this.mqtt.onMessageArrived = this.onReceive.bind(this);
+    this.mqtt.onConnectionLost = this.onFailure.bind(this);
     this.showToast("Verbinde zum Server");
     try {
       this.mqtt.connect({
-        onSuccess: this.onConnect,
-        onFailure: this.onFailure,
+        onSuccess: this.onConnect.bind(this),
+        onFailure: this.onFailure.bind(this),
       });
     } catch (err) {
       console.log(err);
@@ -80,11 +79,11 @@ class EventContribution {
     }
   }
 
-  send = (
+  send(
     topic: string,
     payload: string,
     retain: boolean = false
-  ): boolean => {
+  ): boolean {
     try {
       this.showToast();
       this.mqtt.send(topic, payload, 1, retain);
@@ -96,7 +95,7 @@ class EventContribution {
     return false;
   }
 
-  showToast = (txt?: string): void => {
+  showToast(txt?: string): void {
     const elem = document.getElementById("toast");
     if (txt) {
       this.addFromTemplate("template-toast", "toast-host", { text: txt });
@@ -105,13 +104,13 @@ class EventContribution {
     }
   }
 
-  onFailure = (err): void => {
+  onFailure(err: any): void {
     console.log(err);
     this.showToast("FEHLER: Neue Verbindung in 2 Sekunden.");
     window.setTimeout(this.connect, 2000);
   }
 
-  onConnect = (): void => {
+  onConnect(): void {
     this.showToast();
     try {
       this.mqtt.subscribe(EventContribution.topic_note, { qos: 1 });
@@ -148,7 +147,7 @@ class EventContribution {
     }
   }
 
-  onReceive = (msg: any): void => {
+  onReceive(msg: any): void {
     try {
       // stats
       if (msg.destinationName.startsWith(EventContribution.topic_stats + "/")) {
@@ -187,11 +186,11 @@ class EventContribution {
     }
   }
 
-  addFromTemplate = (
+  addFromTemplate(
     tmplId: string,
     destId: string,
     data: Object
-  ): HTMLElement | undefined => {
+  ): HTMLElement | undefined {
     const tmpl = document.getElementById(tmplId);
     const dest = document.getElementById(destId);
     if (tmpl !== null && dest !== null) {
@@ -239,21 +238,21 @@ class EventContribution {
     }
   }
 
-  findClosestInput = (elem: HTMLElement): HTMLInputElement | null | undefined => {
+  findClosestInput(elem: HTMLElement): HTMLInputElement | null | undefined {
     return elem.closest(".input-group")?.querySelector("input");
   }
 
-  removeById = (id: string): void => {
+  removeById(id: string): void {
     document.getElementById(id)?.remove();
   }
 
-  receiveStats = (topic: string, txt: string): void => {
+  receiveStats(topic: string, txt: string): void {
     const dest = document.getElementById("stats-clients");
     if (topic == EventContribution.topic_stats + "/connected")
       if (dest !== null) dest.innerHTML = txt;
   }
 
-  sendComment = (evt: Event | KeyboardEvent): void => {
+  sendComment(evt: Event | KeyboardEvent): void {
     let target = evt.target as HTMLElement | null | undefined
     if (
       (evt instanceof KeyboardEvent &&
@@ -273,7 +272,7 @@ class EventContribution {
     }
   }
 
-  receiveComment = (id: string, txt: string): void => {
+  receiveComment(id: string, txt: string): void {
     if (txt) {
       this.storage.comments[id] = { text: txt };
       const data = {
@@ -288,9 +287,9 @@ class EventContribution {
     }
   }
 
-  takeComment = (evt: UIEvent): void => {
-    const target = evt.target as HTMLElement
-    const id = target.dataset.id;
+  takeComment(evt: UIEvent): void {
+    const target = evt.target as HTMLElement | null
+    const id = target?.dataset.id;
     if (!id) return;
     //if (confirm("Diesen Kommentar wirklich übernehmen?")) {
     this.send(EventContribution.topic_comment + "/" + id, "", true);
@@ -298,14 +297,15 @@ class EventContribution {
     //}
   }
 
-  deleteComment = (evt: UIEvent): void => {
-    const target = evt.target as HTMLElement
-    if (confirm("Diesen Kommentar wirklich löschen?")) {
-      this.send(EventContribution.topic_comment + "/" + target.dataset.id, "", true);
+  deleteComment(evt: UIEvent): void {
+    const target = evt.target as HTMLElement | null
+    const id = target?.dataset.id;
+    if (id && confirm("Diesen Kommentar wirklich löschen?")) {
+      this.send(EventContribution.topic_comment + "/" + id, "", true);
     }
   }
 
-  sendNote = (evt: UIEvent): void => {
+  sendNote(evt: UIEvent): void {
     let target = evt.target as HTMLElement | null | undefined;
     if (
       (evt instanceof KeyboardEvent &&
@@ -321,7 +321,7 @@ class EventContribution {
     }
   }
 
-  receiveNote = (txt: string): void => {
+  receiveNote(txt: string): void {
     if (txt) {
       const data = { text: this.escapeHTML(txt) };
       this.addFromTemplate("template-note", "note-stream", data);
@@ -330,12 +330,12 @@ class EventContribution {
     }
   }
 
-  sendMessage = (id: string, txt: string, likes: number = 0): boolean => {
+  sendMessage(id: string, txt: string, likes: number = 0): boolean {
     const data = JSON.stringify({ text: txt, likes: likes });
     return this.send(EventContribution.topic_message + "/" + id, data, true);
   }
 
-  receiveMessage = (id: string, input: string): void => {
+  receiveMessage(id: string, input: string): void {
     if (input) {
       const json = JSON.parse(input);
       this.storage.messages[id] = {
@@ -354,18 +354,18 @@ class EventContribution {
     }
   }
 
-  highlightMessage = (evt: UIEvent): boolean => {
-    const target = evt.target as HTMLElement
-    const id = target.dataset.id;
+  highlightMessage(evt: UIEvent): boolean {
+    const target = evt.target as HTMLElement | null
+    const id = target?.dataset.id;
     if (id && this.storage.messages[id]) {
       const data = JSON.stringify(this.storage.messages[id]);
       return this.send(EventContribution.topic_highlight, data);
     } return false
   }
 
-  likeMessage = (evt: UIEvent): void => {
-    const target = evt.target as HTMLElement
-    const id = target.dataset.id;
+  likeMessage(evt: UIEvent): void {
+    const target = evt.target as HTMLElement | null
+    const id = target?.dataset.id;
     if (!id) return
     // cookie
     let liked: string[] = [];
@@ -388,23 +388,23 @@ class EventContribution {
     }
   }
 
-  deleteMessage = (evt: UIEvent): void => {
-    const target = evt.target as HTMLElement
+  deleteMessage(evt: UIEvent): void {
+    const target = evt.target as HTMLElement | null
     if (confirm("Diese Nachricht wirklich löschen?")) {
-      if (target.dataset.id) {
+      if (target?.dataset.id) {
         this.send(EventContribution.topic_message + "/" + target.dataset.id, "", true);
       }
     }
   }
 
-  receiveLike = (id: string, client: string, txt: string): void => {
+  receiveLike(id: string, client: string, txt: string): void {
     if (txt && this.storage.messages[id]) {
       this.sendMessage(id, this.storage.messages[id].text, this.storage.messages[id].likes + 1);
       this.send(EventContribution.topic_like + "/" + id + "/" + client, "", true);
     }
   }
 
-  receiveHighlight = (txt: string): void => {
+  receiveHighlight(txt: string): void {
     const data = JSON.parse(txt);
     if (!data) return
     this.addFromTemplate("template-highlight", "highlight-stream", data);

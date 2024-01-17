@@ -18,7 +18,8 @@
     "tslib": "^2.5.0"
   },
   "scripts": {
-    "build": "npx rollup -c"
+    "build": "npx rollup -c",
+    "dev": "npx rollup -cw"
   },
   "private": true
 }
