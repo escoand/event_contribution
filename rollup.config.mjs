@@ -1,10 +1,11 @@
 import { babel } from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
-import htmlTemplate from "rollup-plugin-generate-html-template";
 import resolve from "@rollup/plugin-node-resolve";
-import postcss from "rollup-plugin-postcss";
 import terser from "@rollup/plugin-terser";
 import { minify } from "html-minifier";
+import htmlTemplate from "rollup-plugin-generate-html-template";
+import postcss from "rollup-plugin-postcss";
+import serve from "rollup-plugin-serve";
 
 const srcDir = "src";
 const distDir = "dist";
@@ -25,7 +26,9 @@ export default {
       ],
       targets: "defaults",
     }), // transpile to ES5
-    terser(), // minify generated ES bundle
+    process.env.ROLLUP_WATCH
+      ? serve({ contentBase: "dist" }) // serve
+      : terser(), // minify generated ES bundle
     postcss({ extract: true, minimize: true }), // bundle css files
     htmlTemplate({ template: srcDir + "/index.html" }),
     htmlTemplate({ template: srcDir + "/admin.html" }),
