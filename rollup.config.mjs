@@ -22,7 +22,7 @@ export default {
       extensions,
       presets: [
         "@babel/preset-typescript",
-        ["@babel/preset-env", { corejs: "3.29", useBuiltIns: "entry" }],
+        ["@babel/preset-env", { corejs: "3.37", useBuiltIns: "entry" }],
       ],
       targets: "defaults",
     }), // transpile to ES5
