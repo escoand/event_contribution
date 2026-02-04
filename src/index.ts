@@ -50,7 +50,7 @@ class EventContribution {
       window.location.hostname == "localhost" ||
       window.location.hostname.endsWith(".vercel.app")
     ) {
-      return "wss://mqtt.eclipseprojects.io/mqtt";
+      return "wss://broker.emqx.io:8084";
     } else if (window.location.protocol == "https:") {
       return `wss://${window.location.hostname}:${window.location.port}/mqtt`;
     } else {
