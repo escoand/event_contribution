@@ -1,64 +1,61 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Nachrichten</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- templates -->
-    <script id="template-note" type="text/template">
-      <div id="note-top" class="card bg-primary text-white mb-3">
-      <div class="card-body text-center p-2"><h6 class="m-0">{{text}}</h6></div>
-      </div>
-    </script>
-    <script id="template-message" type="text/template">
-      <div id="message-{{id}}" class="card mb-3">
-      <div class="card-body">
-      <div class="float-right ml-2">
-      <button id="likes-{{id}}" data-id="{{id}}" data-bind-click="likeMessage" class="btn btn-sm btn-success">&#128077; {{likes}}</button>
-      </div>
-      <div class="card-text">{{text}}</div>
-      </div>
-      </div>
-    </script>
-    <script id="template-likes-loading" type="text/template">
-      <span id="likes-{{id}}" class="spinner-border text-success" style="height:26px;width:26px;"></span>
-    </script>
-    <script id="template-toast" type="text/template">
-      <div id="toast" class="toast text-center bg-secondary text-white rounded-pill fixed-bottom mx-auto my-5" style="opacity:1">
-      <div class="toast-body">{{text}}</div>
-      </div>
-    </script>
-  </head>
+<head>
+  <title>Nachrichten</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <body id="toast-host">
-    <div class="container-fluid py-3 mb-5">
-      <div class="row has-footer">
-        <div id="note-stream" class="col-12"></div>
-        <div id="message-stream" class="col-12"></div>
+  <!-- templates -->
+  <template id="template-note">
+    <div id="note-top" class="card bg-primary text-white mb-3">
+      <div class="card-body text-center p-2">
+        <h6 class="m-0"><var>text</var></h6>
       </div>
     </div>
-    <footer
-      class="footer fixed-bottom bg-light border-top border-secondary pt-3"
-    >
-      <div class="container-fluid form-group">
-        <div class="input-group">
-          <input
-            data-bind-keypress="sendComment"
-            type="text"
-            placeholder="&#128172; Meine Nachricht"
-            class="form-control"
-          />
-          <div class="input-group-append">
-            <button
-              data-bind-click="sendComment"
-              class="btn bg-secondary btn-outline-secondary"
-            >
-              &#128232;
-            </button>
-          </div>
+  </template>
+  <template id="template-message">
+    <div data-attr="id:elId" class="card mb-3">
+      <div class="card-body">
+        <div class="float-right ml-2">
+          <button data-attr="id:likesId|data-id:id" data-event="click:onLikeMessage"
+            class="btn btn-sm btn-success">&#128077; <var>likes</var></button>
+        </div>
+        <div class="card-text"><var>text</var></div>
+      </div>
+    </div>
+  </template>
+  <template id="template-likes-loading">
+    <span data-attr="id:_elId" class="spinner-border text-success" style="height:26px;width:26px;"></span>
+  </template>
+  <template id="template-toast">
+    <div id="toast" class="toast text-center bg-secondary text-white rounded-pill fixed-bottom mx-auto my-5"
+      style="opacity:1">
+      <div class="toast-body"><var>text</var></div>
+    </div>
+  </template>
+</head>
+
+<body id="toast-host">
+  <div class="container-fluid py-3 mb-5">
+    <div class="row has-footer">
+      <div id="note-stream" class="col-12"></div>
+      <div id="message-stream" class="col-12"></div>
+    </div>
+  </div>
+  <footer class="footer fixed-bottom bg-light border-top border-secondary pt-3">
+    <div class="container-fluid form-group">
+      <div class="input-group">
+        <input data-event="keypress:onSendComment" type="text" placeholder="&#128172; Meine Nachricht"
+          class="form-control" />
+        <div class="input-group-append">
+          <button data-event="click:onSendComment" class="btn bg-secondary btn-outline-secondary">
+            &#128232;
+          </button>
         </div>
       </div>
-    </footer>
-  </body>
+    </div>
+  </footer>
+</body>
+
 </html>
