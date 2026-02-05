@@ -28,21 +28,18 @@
     </div>
   </template>
   <template id="template-message">
-    <div data-attr="id:elId">
-      <div data-orderid="{{likes}}" class="card mb-3 w-100">
-        <div class="card-body">
-          <div class="float-right">
-            <span class="badge badge-success p-2">&#128077; <var>likes</var></span>
-          </div>
-          <div class="card-text"><var>text</var></div>
+    <div data-attr="id:elId" data-orderid="{{likes}}" class="card mb-3 w-100">
+      <div class="card-body">
+        <div class="float-right">
+          <span class="badge badge-success p-2">&#128077; <var>likes</var></span>
         </div>
+        <div class="card-text"><var>text</var></div>
       </div>
       <div class="card-footer text-right">
         <button data-attr="data-id:id" data-event="click:onHighlightMessage"
           class="btn btn-sm btn-success">Hervorheben</button>
         <button data-attr="data-id:id" data-event="click:onDeleteMessage" class="btn btn-sm btn-danger">Löschen</button>
       </div>
-    </div>
     </div>
   </template>
   <template id="template-toast">

@@ -18,15 +18,14 @@
     <div data-attr="id:elId" class="card mb-3">
       <div class="card-body">
         <div class="float-right ml-2">
-          <button data-attr="id:likesId|data-id:id" data-event="click:onLikeMessage"
-            class="btn btn-sm btn-success">&#128077; <var>likes</var></button>
+          <button data-attr="data-id:id" data-event="click:onLikeMessage" data-if="!loading"
+            class="btn btn-sm btn-success">&#128077;
+            <var>likes</var></button>
+          <span data-if="loading" class="spinner-border text-success" style="height:26px;width:26px;"></span>
         </div>
         <div class="card-text"><var>text</var></div>
       </div>
     </div>
-  </template>
-  <template id="template-likes-loading">
-    <span data-attr="id:_elId" class="spinner-border text-success" style="height:26px;width:26px;"></span>
   </template>
   <template id="template-toast">
     <div id="toast" class="toast text-center bg-secondary text-white rounded-pill fixed-bottom mx-auto my-5"
