@@ -17,15 +17,7 @@ export default {
   plugins: [
     commonjs({ include: ["node_modules/**"] }), // convert CommonJS modules to ES6
     resolve({ extensions }), // resolve third party modules
-    babel({
-      babelHelpers: "bundled",
-      extensions,
-      presets: [
-        "@babel/preset-typescript",
-        ["@babel/preset-env", { corejs: "3.37", useBuiltIns: "entry" }],
-      ],
-      targets: "defaults",
-    }), // transpile to ES5
+    babel({ babelHelpers: "bundled", extensions, targets: "defaults" }), // transpile to ES5
     process.env.ROLLUP_WATCH
       ? serve({ contentBase: "dist" }) // serve
       : terser(), // minify generated ES bundle
