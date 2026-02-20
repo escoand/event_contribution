@@ -1,0 +1,3 @@
+[submodule "vanillaTemplates"]
+	path = vanillaTemplates
+	url = https://github.com/Tehes/vanillaTemplates.git

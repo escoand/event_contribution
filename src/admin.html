@@ -1,119 +1,108 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Moderator</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- templates -->
-    <script id="template-comment" type="text/template">
-      <div id="comment-{{id}}" class="card mb-3 mr-3">
+<head>
+  <title>Moderator</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- templates -->
+  <template id="template-comment">
+    <div data-attr="id:elId" class="card mb-3 mr-3">
       <div class="card-body">
-      <div class="card-text">{{text}}</div>
-      <div class="card-text"><small class="text-muted">{{date}}</small></div>
+        <div class="card-text"><var>text</var></div>
+        <div class="card-text"><small class="text-muted"><var>date</var></small></div>
       </div>
       <div class="card-footer text-right">
-      <button data-id="{{id}}" data-bind-click="takeComment" class="btn btn-sm btn-success">Übernehmen</button>
-      <button data-id="{{id}}" data-bind-click="deleteComment" class="btn btn-sm btn-danger">Löschen</button>
+        <button data-attr="data-id:id" data-event="click:onTakeComment"
+          class="btn btn-sm btn-success">Übernehmen</button>
+        <button data-attr="data-id:id" data-event="click:onDeleteComment" class="btn btn-sm btn-danger">Löschen</button>
       </div>
+    </div>
+  </template>
+  <template id="template-note">
+    <div id="note-top" class="card bg-primary text-white mb-3 w-100">
+      <div class="card-body text-center p-2">
+        <h6 class="m-0"><var>text</var></h6>
       </div>
-    </script>
-    <script id="template-note" type="text/template">
-      <div id="note-top" class="card bg-primary text-white mb-3 w-100">
-      <div class="card-body text-center p-2"><h6 class="m-0">{{text}}</h6></div>
-      </div>
-    </script>
-    <script id="template-message" type="text/template">
-      <div id="message-{{id}}" data-orderid="{{likes}}" class="card mb-3 w-100">
+    </div>
+  </template>
+  <template id="template-message">
+    <div data-attr="id:elId" data-orderid="{{likes}}" class="card mb-3 w-100">
       <div class="card-body">
-      <div class="float-right">
-      <span class="badge badge-success p-2">&#128077; {{likes}}</span>
-      </div>
-      <div class="card-text">{{text}}</div>
-      </div>
-      <div class="card-footer text-right">
-      <button data-id="{{id}}" data-bind-click="highlightMessage" class="btn btn-sm btn-success">Hervorheben</button>
-      <button data-id="{{id}}" data-bind-click="deleteMessage" class="btn btn-sm btn-danger">Löschen</button>
-      </div>
-      </div>
-    </script>
-    <script id="template-toast" type="text/template">
-      <div id="toast" class="toast text-center bg-secondary text-white rounded-pill fixed-bottom mx-auto my-3" style="opacity:1;">
-      <div class="toast-body">{{text}}</div>
-      </div>
-    </script>
-  </head>
-
-  <body id="toast-host" data-is-admin="true">
-    <div class="container-fluid pt-3">
-      <div class="row">
-        <div class="col-lg-7 pr-lg-2">
-          <div class="container-fluid">
-            <div class="row">
-              <h4 class="col pl-0">
-                Eingang
-                <small
-                  ><a href="index.html" target="_blank">&#128279;</a></small
-                >
-              </h4>
-              <div class="col text-right text-muted pr-0">
-                Clients: <span id="stats-clients">?</span>
-              </div>
-            </div>
-            <div class="form-group row">
-              <div class="input-group">
-                <input
-                  data-bind-keypress="sendComment"
-                  type="text"
-                  placeholder="&#128172; Neue Nachricht"
-                  class="form-control"
-                />
-                <div class="input-group-append">
-                  <button
-                    data-bind-click="sendComment"
-                    class="btn bg-secondary btn-outline-secondary"
-                  >
-                    &#128232;
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div id="comment-stream" class="row"></div>
-          </div>
+        <div class="float-right">
+          <span class="badge badge-success p-2">&#128077; <var>likes</var></span>
         </div>
-        <div class="col-lg-5 pl-lg-2">
-          <div class="container-fluid">
-            <div class="row">
-              <h4>
-                Ausgang
-                <small
-                  ><a href="presenter.html" target="_blank">&#128279;</a></small
-                >
-              </h4>
+        <div class="card-text"><var>text</var></div>
+      </div>
+      <div class="card-footer text-right">
+        <button data-attr="data-id:id" data-event="click:onHighlightMessage"
+          class="btn btn-sm btn-success">Hervorheben</button>
+        <button data-attr="data-id:id" data-event="click:onDeleteMessage" class="btn btn-sm btn-danger">Löschen</button>
+      </div>
+    </div>
+  </template>
+  <template id="template-toast">
+    <div id="toast" class="toast text-center bg-secondary text-white rounded-pill fixed-bottom mx-auto my-3"
+      style="opacity:1;">
+      <div class="toast-body"><var>text</var></div>
+    </div>
+  </template>
+</head>
+
+<body id="toast-host" data-is-admin="true">
+  <div class="container-fluid pt-3">
+    <div class="row">
+      <div class="col-lg-7 pr-lg-2">
+        <div class="container-fluid">
+          <div class="row">
+            <h4 class="col pl-0">
+              Eingang
+              <small><a href="index.html" target="_blank">&#128279;</a></small>
+            </h4>
+            <div class="col text-right text-muted pr-0">
+              Clients: <span id="stats-clients">?</span>
             </div>
-            <div class="form-group row">
-              <div class="input-group">
-                <input
-                  data-bind-keypress="sendNote"
-                  type="text"
-                  placeholder="&#128172; Neue Info"
-                  class="form-control"
-                />
-                <div class="input-group-append">
-                  <button
-                    data-bind-click="sendNote"
-                    class="btn bg-secondary btn-outline-secondary"
-                  >
-                    &#128232;
-                  </button>
-                </div>
+          </div>
+          <div class="form-group row">
+            <div class="input-group">
+              <input data-event="keypress:onSendComment" type="text" placeholder="&#128172; Neue Nachricht"
+                class="form-control" />
+              <div class="input-group-append">
+                <button data-event="click:onSendComment" class="btn bg-secondary btn-outline-secondary">
+                  &#128232;
+                </button>
               </div>
             </div>
-            <div id="note-stream" class="row"></div>
-            <div id="message-stream" class="row"></div>
           </div>
+          <div id="comment-stream" class="row"></div>
+        </div>
+      </div>
+      <div class="col-lg-5 pl-lg-2">
+        <div class="container-fluid">
+          <div class="row">
+            <h4>
+              Ausgang
+              <small><a href="presenter.html" target="_blank">&#128279;</a></small>
+            </h4>
+          </div>
+          <div class="form-group row">
+            <div class="input-group">
+              <input data-event="keypress:onSendNote" type="text" placeholder="&#128172; Neue Info"
+                class="form-control" />
+              <div class="input-group-append">
+                <button data-event="click:onSendNote" class="btn bg-secondary btn-outline-secondary">
+                  &#128232;
+                </button>
+              </div>
+            </div>
+          </div>
+          <div id="note-stream" class="row"></div>
+          <div id="message-stream" class="row"></div>
         </div>
       </div>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>
