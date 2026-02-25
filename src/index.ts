@@ -25,6 +25,24 @@ function random_id(): string {
   ).toString(36);
 }
 
+function simpleHash(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash + str.charCodeAt(i)) | 0;
+  }
+  return (hash >>> 0).toString(36);
+}
+
+function mqttUrl(): string {
+  if (window.location.hostname.endsWith(".vercel.app")) {
+    return "wss://broker.emqx.io:8084/mqtt";
+  } else if (window.location.protocol == "https:") {
+    return `wss://${window.location.hostname}:${window.location.port}/mqtt`;
+  } else {
+    return `ws://${window.location.hostname}:${window.location.port}/mqtt`;
+  }
+}
+
 function renderFromTemplate(
   tmplId: string,
   destId: string | HTMLElement,
@@ -89,7 +107,7 @@ function registerEventListeners(
 
 class EventContribution {
   static topic_base =
-    EventContribution.simpleHash(window.location.hostname || "localhost") +
+    simpleHash(window.location.hostname || "localhost") +
     "/event/contribution/";
   static topic_comment = this.topic_base + "comment";
   static topic_note = this.topic_base + "note";
@@ -100,18 +118,7 @@ class EventContribution {
 
   private host_client = "client-" + random_id();
   // @ts-ignore: 2 parameter call handled internally
-  private mqtt = new Client(
-    EventContribution.mqttUrl(),
-    this.host_client,
-  ) as any;
-
-  constructor() {
-    registerEventListeners(document.body, {
-      onSendComment: this.onSendComment.bind(this),
-      onSendNote: this.onSendNote.bind(this),
-    });
-    this.connect();
-  }
+  private mqtt = new Client(mqttUrl(), this.host_client) as any;
 
   private _store = new Proxy(
     {
@@ -218,22 +225,12 @@ class EventContribution {
     },
   );
 
-  static simpleHash(str: string): string {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = ((hash << 5) - hash + str.charCodeAt(i)) | 0;
-    }
-    return (hash >>> 0).toString(36);
-  }
-
-  static mqttUrl(): string {
-    if (window.location.hostname.endsWith(".vercel.app")) {
-      return "wss://broker.emqx.io:8084/mqtt";
-    } else if (window.location.protocol == "https:") {
-      return `wss://${window.location.hostname}:${window.location.port}/mqtt`;
-    } else {
-      return `ws://${window.location.hostname}:${window.location.port}/mqtt`;
-    }
+  constructor() {
+    registerEventListeners(document.body, {
+      onSendComment: this.onSendComment.bind(this),
+      onSendNote: this.onSendNote.bind(this),
+    });
+    this.connect();
   }
 
   connect(): void {
