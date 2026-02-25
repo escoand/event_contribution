@@ -1,4 +1,4 @@
-FROM docker-public.docker.devstack.vwgroup.com/eclipse-mosquitto:2
+FROM eclipse-mosquitto:2
 
 RUN apk add --no-cache caddy
 
