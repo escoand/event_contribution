@@ -43,9 +43,22 @@
     </div>
   </template>
   <template id="template-toast">
-    <div id="toast" class="toast text-center bg-secondary text-white rounded-pill fixed-bottom mx-auto my-3"
-      style="opacity:1;">
+    <div id="toast" class="toast show text-center bg-secondary text-white rounded-pill fixed-bottom mx-auto my-3">
       <div class="toast-body"><var>text</var></div>
+    </div>
+  </template>
+  <template id="template-highlight">
+    <div data-attr="id:elId" class="card bg-primary text-white mb-3 w-100">
+      <div class="card-body p-2">
+        <div class="float-right ml-2">
+          <span class="badge badge-success p-2">&#128077; <var>likes</var></span>
+        </div>
+        <div class="card-text"><var>text</var></div>
+      </div>
+      <div class="card-footer text-right">
+        <button data-event="click:onUnhighlightMessage" class="btn btn-sm btn-danger">Nicht
+          hervorheben</button>
+      </div>
     </div>
   </template>
 </head>
@@ -98,6 +111,7 @@
             </div>
           </div>
           <div id="note-stream" class="row"></div>
+          <div id="highlight-stream" class="row"></div>
           <div id="message-stream" class="row"></div>
         </div>
       </div>

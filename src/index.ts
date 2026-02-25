@@ -17,11 +17,19 @@ type Message = Comment & {
   loading?: boolean;
 };
 
+function random_id(): string {
+  return (
+    Number(String(Math.random()).slice(2)) +
+    Date.now() +
+    Math.round(performance.now())
+  ).toString(36);
+}
+
 function renderFromTemplate(
   tmplId: string,
   destId: string | HTMLElement,
   data: TemplateData,
-  events: Record<string, Function>,
+  events?: Record<string, Function>,
 ) {
   const shadow = document.createElement("div");
   const tmpl = document.getElementById(tmplId) as HTMLTemplateElement;
@@ -64,7 +72,10 @@ function renderFromTemplate(
   return tmp2;
 }
 
-function registerEventListeners(fragment: HTMLElement, data: Dict<Function>) {
+function registerEventListeners(
+  fragment: HTMLElement,
+  data: Record<string, Function>,
+) {
   [...fragment.querySelectorAll("[data-event]")]
     .filter((elem) => elem instanceof HTMLElement)
     .forEach((elem) => {
@@ -87,7 +98,7 @@ class EventContribution {
   static topic_highlight = this.topic_base + "highlight";
   static topic_stats = "$SYS/broker/clients";
 
-  private host_client = "client-" + EventContribution.random_id();
+  private host_client = "client-" + random_id();
   // @ts-ignore: 2 parameter call handled internally
   private mqtt = new Client(
     EventContribution.mqttUrl(),
@@ -169,7 +180,7 @@ class EventContribution {
       ),
     },
     {
-      set(target, symbol, newValue) {
+      set: (target, symbol, newValue) => {
         if (symbol === "note") {
           if (newValue) {
             const data = { elId: "note-top", text: newValue };
@@ -179,10 +190,17 @@ class EventContribution {
           }
         } else if (symbol === "highlight") {
           if (newValue) {
-            renderFromTemplate("template-highlight", "highlight-stream", {
-              ...newValue,
-              elId: "current-highlight",
-            });
+            renderFromTemplate(
+              "template-highlight",
+              "highlight-stream",
+              {
+                ...newValue,
+                elId: "current-highlight",
+              },
+              {
+                onUnhighlightMessage: this.onUnhighlightMessage.bind(this),
+              },
+            );
           } else {
             document
               .getElementById("highlight-stream")
@@ -199,14 +217,6 @@ class EventContribution {
       },
     },
   );
-
-  static random_id(): string {
-    return (
-      Number(String(Math.random()).slice(2)) +
-      Date.now() +
-      Math.round(performance.now())
-    ).toString(36);
-  }
 
   static simpleHash(str: string): string {
     let hash = 0;
@@ -254,18 +264,16 @@ class EventContribution {
   }
 
   showToast(txt?: string): void {
-    const elem = document.getElementById("toast");
+    document.getElementById("toast")?.remove();
     if (txt) {
       renderFromTemplate("template-toast", "toast-host", { text: txt });
-    } else if (elem) {
-      elem.remove();
     }
   }
 
   onFailure(err: any): void {
     console.log(err);
     this.showToast("FEHLER: Neue Verbindung in 2 Sekunden.");
-    window.setTimeout(this.connect, 2000);
+    window.setTimeout(this.connect.bind(this), 2000);
   }
 
   onConnect(): void {
@@ -362,7 +370,7 @@ class EventContribution {
     ) {
       if (
         this.send(
-          EventContribution.topic_comment + "/" + EventContribution.random_id(),
+          EventContribution.topic_comment + "/" + random_id(),
           target.value,
           true,
         )
@@ -446,9 +454,14 @@ class EventContribution {
     const id = target?.dataset.id;
     if (id && this._store.messages[id]) {
       const data = JSON.stringify(this._store.messages[id]);
-      return this.send(EventContribution.topic_highlight, data);
+      return this.send(EventContribution.topic_highlight, data, true);
     }
+    console.log(evt);
     return false;
+  }
+
+  onUnhighlightMessage(evt: UIEvent): void {
+    this.send(EventContribution.topic_highlight, "", true);
   }
 
   onLikeMessage(evt: UIEvent): void {
@@ -512,8 +525,12 @@ class EventContribution {
   }
 
   onReceiveHighlight(txt: string): void {
-    const data = JSON.parse(txt);
-    this._store.highlight = data;
+    if (txt) {
+      const data = JSON.parse(txt);
+      this._store.highlight = data;
+    } else {
+      this._store.highlight = undefined;
+    }
   }
 }
 
