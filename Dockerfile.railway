@@ -5,4 +5,4 @@ COPY dist/ /www/
 
 EXPOSE 9001
 
-CMD ["sh", "-c", "chown mosquitto /data && /usr/sbin/mosquitto -c /mosquitto/mosquitto/mosquitto.conf"]
+CMD ["sh", "-c", "chown mosquitto /data && /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf"]
