@@ -1,11 +1,14 @@
-FROM eclipse-mosquitto:2.0
+FROM docker-public.docker.devstack.vwgroup.com/eclipse-mosquitto:2
 
-COPY mosquitto.conf  /mosquitto/config/mosquitto.conf
-COPY dist/ /www/
+RUN apk add --no-cache caddy
 
 # deactivated for railway.com
 #VOLUME /data
+RUN mkdir /data && chown mosquitto /data
 
-EXPOSE 9001
+COPY Caddyfile mosquitto.conf /etc/
+COPY dist/ /www/
 
-CMD ["sh", "-c", "chown mosquitto /data && /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf"]
+EXPOSE 80
+
+CMD ["sh", "-c", "mosquitto -c /etc/mosquitto.conf & caddy run -c /etc/Caddyfile"]

@@ -21,6 +21,7 @@ function renderFromTemplate(
   tmplId: string,
   destId: string | HTMLElement,
   data: TemplateData,
+  events: Record<string, Function>,
 ) {
   const shadow = document.createElement("div");
   const tmpl = document.getElementById(tmplId) as HTMLTemplateElement;
@@ -31,8 +32,7 @@ function renderFromTemplate(
 
   if (tmpl === null || dest === null) return;
 
-  renderTemplate(tmpl, data, shadow).then(() => {
-    registerEventListeners(shadow, data);
+  renderTemplate(tmpl, data, shadow, { events }).then(() => {
     if (prev) {
       prev.replaceWith(...shadow.childNodes);
     } else {
@@ -95,6 +95,10 @@ class EventContribution {
   ) as any;
 
   constructor() {
+    registerEventListeners(document.body, {
+      onSendComment: this.onSendComment.bind(this),
+      onSendNote: this.onSendNote.bind(this),
+    });
     this.connect();
   }
 
@@ -102,7 +106,7 @@ class EventContribution {
     {
       note: undefined as string | undefined,
       highlight: undefined as string | undefined,
-      comments: new Proxy<Dict<Comment>>(
+      comments: new Proxy<Record<string, Comment>>(
         {},
         {
           deleteProperty: (target, symbol: string) => {
@@ -120,16 +124,17 @@ class EventContribution {
               elId: "comment-" + symbol,
               id: symbol,
               text: newValue.text,
+            };
+            renderFromTemplate("template-comment", root, data, {
               onDeleteComment: this.onDeleteComment.bind(this),
               onTakeComment: this.onTakeComment.bind(this),
-            };
-            renderFromTemplate("template-comment", root, data);
+            });
             target[symbol] = newValue;
             return true;
           },
         },
       ),
-      messages: new Proxy<Dict<Message>>(
+      messages: new Proxy<Record<string, Message>>(
         {},
         {
           deleteProperty: (target, symbol: string) => {
@@ -148,11 +153,12 @@ class EventContribution {
               likes: newValue.likes,
               loading: newValue.loading,
               text: newValue.text,
+            };
+            renderFromTemplate("template-message", root, data, {
               onDeleteMessage: this.onDeleteMessage.bind(this),
               onHighlightMessage: this.onHighlightMessage.bind(this),
               onLikeMessage: this.onLikeMessage.bind(this),
-            };
-            renderFromTemplate("template-message", root, data);
+            });
             target[symbol] = newValue;
             if (this._store.highlight === symbol) {
               this._store.highlight = symbol;
@@ -211,10 +217,7 @@ class EventContribution {
   }
 
   static mqttUrl(): string {
-    if (
-      window.location.hostname == "localhost" ||
-      window.location.hostname.endsWith(".vercel.app")
-    ) {
+    if (window.location.hostname.endsWith(".vercel.app")) {
       return "wss://broker.emqx.io:8084/mqtt";
     } else if (window.location.protocol == "https:") {
       return `wss://${window.location.hostname}:${window.location.port}/mqtt`;
@@ -276,10 +279,6 @@ class EventContribution {
         this.mqtt.subscribe(EventContribution.topic_like + "/+/+", { qos: 1 });
         this.mqtt.subscribe(EventContribution.topic_stats + "/#", { qos: 1 });
       }
-      registerEventListeners(document.body, {
-        onSendComment: this.onSendComment.bind(this),
-        onSendNote: this.onSendNote.bind(this),
-      });
     } catch (err) {
       console.log(err);
       this.showToast("FEHLER: Versuche die Seite neu zu laden.");
