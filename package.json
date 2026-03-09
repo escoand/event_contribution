@@ -6,7 +6,7 @@
     "@rollup/plugin-babel": "6.0.4",
     "@rollup/plugin-commonjs": "29.0.2",
     "@rollup/plugin-node-resolve": "15.2.3",
-    "@rollup/plugin-terser": "0.4.4",
+    "@rollup/plugin-terser": "1.0.0",
     "@rollup/plugin-typescript": "11.1.6",
     "core-js": "3.37.1",
     "html-minifier": "4.0.0",
