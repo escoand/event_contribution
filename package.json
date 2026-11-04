@@ -9,7 +9,7 @@
     "@rollup/plugin-terser": "1.0.0",
     "@rollup/plugin-typescript": "12.3.0",
     "core-js": "3.48.0",
-    "html-minifier": "4.0.0",
+    "html-minifier": "5.0.1",
     "paho-mqtt": "1.1.0",
     "rollup": "4.59.0",
     "rollup-plugin-generate-html-template": "1.7.0",
